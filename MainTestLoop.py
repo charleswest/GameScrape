@@ -28,14 +28,14 @@ if  __name__ == '__main__':
 
             data,b,filen = line.split()     #  ignore b data for now
 ##            print  'a{} b {} c {} '.format(a,b,c)     #eval(line)[1]           
-            print 'file>>>>>>>> {} data {} '.format(filen,data)
+            print 'file>>>>>>>> {}  '.format(filen)
             n  = eval(data)
             st = ''
             for x in n:                    # reformat data same as lx           
                 st = st + str(x)
                 lsst = list(st)
                 lsst = map(int,lsst)
-            print lsst 
+            
 ##    now we know what to expect we shall see if we can find it
             h,w,ROI = Part(filen,db)
             cv2.imwrite('input.png',ROI)

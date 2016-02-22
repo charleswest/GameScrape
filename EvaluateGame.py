@@ -38,6 +38,8 @@ def closeUp(cnt,db):
     
 
 def evaluate( cnt1,db):
+    ''' match the incomming contour against the set of digits we have stored in
+        blobs.  '''
  #   global db
     closeUp(cnt1,db)
     path = ("blobs\\*.png" )                
@@ -45,7 +47,7 @@ def evaluate( cnt1,db):
     rn = [] 
     for n,f in enumerate(files):                
         #if db: print 'Blob  ', f[-5:-4],       
-        img = cv2.imread(f,0)
+        img = cv2.imread(f,0)                  # read a digit 
         h,w = img.shape[:2]
 
         #print 'pixels {}, w {} h {} '.format( np.sum(img)/255,w,h) 
@@ -55,7 +57,7 @@ def evaluate( cnt1,db):
         ret = cv2.matchShapes(cnt1,cnt2,1,0.0)
         area = cv2.contourArea(cnt1)
         if db: print 'dist from number {} is {} area is {}'.format( n, round(ret,5),area)
-        rn.append( (ret,n) )
+        rn.append( (ret,n) )     #  list of result from matchShapes 
         
     #  sort all the results and pick the one with the lowest score
     rns = sorted (rn, key = lambda x:x[0])    
@@ -73,11 +75,18 @@ def evaluate( cnt1,db):
 
 
 def evalGame(ROI,db):
+    ''' we obtain the ROI region of interest  from Part or as input from the
+        last screen processed by Maintest.   We look for blob in the ROI and
+        evaluate them by matching to our recorded set of captured digits.
+    '''
  #   global db
     h,w = ROI.shape[:2]
     sROI =     cv2.resize(ROI,(2*w,2*h))        #    this may not be a good idea
                                              # but we did it in CaptureDigits so .. .
     ms = 100;   mx = 550; erd = 0; tx = 127
+    # ms minimum size
+    # erd erosion dilation -- leave this at zero
+    # tx the threshold for the binary mask 
     (cnt,cmask) =  findBlobs(sROI,ms,mx,erd,0,tx) # will modify img to show cnt
     img2 = sROI.copy()    #   copy to mark up for display
     Scnt  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
