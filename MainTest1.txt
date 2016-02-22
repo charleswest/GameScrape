@@ -1,0 +1,58 @@
+Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 20:32:19) [MSC v.1500 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+>>> 
+======== RESTART: C:\Users\charles\Documents\GitHub\GameScrape\MainTestLoop.py ========
+
+This program loads each image in the   directory
+and looks for numbers on the screen.
+ 
+enter q leave early
+'
+
+This program loads each image in the   directory
+and reads the manifest to provide a score for the
+evaluation
+ 
+enter q to leave early
+
+file>>>>>>>> pics\sc2_sample_game_screen.png data (36,0,17,23) 
+[3, 6, 0, 1, 7, 2, 3]
+evalGame returns  [3, 6, 0, 1, 7, 2, 3]
+ input     was    [3, 6, 0, 1, 7, 2, 3]
+file>>>>>>>> pics\sc_sample_terran_1087_267_67_94.png data (1087,267,67,94) 
+[1, 0, 8, 7, 2, 6, 7, 6, 7, 9, 4]
+evalGame returns  [1, 0, 8, 7, 2, 6, 6, 7, 9, 4]
+ input     was    [1, 0, 8, 7, 2, 6, 7, 6, 7, 9, 4]
+file>>>>>>>> pics\sc_sample_terran_114_112_22_38.png data (114,112,22,38) 
+[1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+evalGame returns  [1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+ input     was    [1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+file>>>>>>>> pics\sc_sample_terran_1452_835_95_148.png data (1452,835,95,148) 
+[1, 4, 5, 2, 8, 3, 5, 9, 5, 1, 4, 8]
+evalGame returns  [1, 4, 5, 5, 8, 3, 5, 9, 5, 1, 4, 8]
+ input     was    [1, 4, 5, 2, 8, 3, 5, 9, 5, 1, 4, 8]
+file>>>>>>>> pics\sc_sample_terran_1475_3612_200_200.png data (1475,3612,200,200) 
+[1, 4, 7, 5, 3, 6, 1, 2, 2, 0, 0, 2, 0, 0]
+evalGame returns  [1, 4, 7, 5, 3, 6, 1, 2, 2, 0, 0, 5, 0, 0]
+ input     was    [1, 4, 7, 5, 3, 6, 1, 2, 2, 0, 0, 2, 0, 0]
+file>>>>>>>> pics\sc_sample_terran_177_438_101_129.png data (177,438,101,129) 
+[1, 7, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+evalGame returns  [7, 4, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+ input     was    [1, 7, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+file>>>>>>>> pics\sc_sample_terran_302_1312_168_188.png data (302,1312,168,188) 
+[3, 0, 2, 1, 3, 1, 2, 1, 6, 8, 1, 8, 8]
+evalGame returns  [3, 0, 2, 1, 3, 1, 5, 6, 1, 9, 1, 8, 8]
+ input     was    [3, 0, 2, 1, 3, 1, 2, 1, 6, 8, 1, 8, 8]
+file>>>>>>>> pics\sc_sample_terran_324_260_42_54.png data (324,260,42,54) 
+[3, 2, 4, 2, 6, 0, 4, 2, 5, 4]
+evalGame returns  [3, 2, 4, 2, 6, 0, 4, 5, 5, 4]
+ input     was    [3, 2, 4, 2, 6, 0, 4, 2, 5, 4]
+file>>>>>>>> pics\sc_sample_terran_69_148_27_38.png data (69,148,27,38) 
+[6, 9, 1, 4, 8, 2, 7, 3, 8]
+evalGame returns  [6, 6, 8, 5, 7, 3, 8]
+ input     was    [6, 9, 1, 4, 8, 2, 7, 3, 8]
+file>>>>>>>> pics\sc_sample_zerg_99_20_19_18_red.png data (99,20,19,18) 
+[9, 9, 2, 0, 1, 9, 1, 8]
+evalGame returns  [9, 9, 2, 0]
+ input     was    [9, 9, 2, 0, 1, 9, 1, 8]
+>>> 
