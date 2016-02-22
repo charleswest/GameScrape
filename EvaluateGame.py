@@ -14,6 +14,7 @@ from findBlobs import findBlobs, boundsBlob, stdSize
 import warnings 
 print __doc__
 def Part(  fx,db):
+    ''' partition the image and return the ROI '''
     img = cv2.imread(fx)
     h,w = img.shape[:2]
     #print 'image h {} w {}'.format(h,w)
@@ -24,16 +25,9 @@ def Part(  fx,db):
 
 def closeUp(cnt,db):
     ''' display a closeup view of a contour.'''
-    fx = 'pics\sc_sample_terran_1087_267_67_94.png'      
-    h,w,ROI = Part(fx,0)      #  ROI   region of inte
-    h,w = ROI.shape[:2]
-    img =     cv2.resize(ROI,(2*w,2*h)) 
-    h,w = img.shape[:2]
-    # print ' Closeup ', h,w
-    img = img - img
+    img = np.zeros((120,960,3), np.uint8)          # empty black window   
     cv2.drawContours(img,[cnt],0,(255,255,255),1)
     imgx =    img.copy()
-  #  imgy =  cv2.resize(img, ( nw, int (nh) )  ) 
     cvs(db,imgx,'close up')
     
 
@@ -62,16 +56,15 @@ def evaluate( cnt1,db):
     #  sort all the results and pick the one with the lowest score
     rns = sorted (rn, key = lambda x:x[0])    
     if db: print 'rn is ',round(rns[0][0],5), rns[0][1], 'area' ,area
-    #  if the best one was close enough filter further based on number and area  
-    if rns[0][0] <  .35:   #.1:
-        if rns[0][1] == 4 and (area < 200 or area > 310):
-            return(False,0)
-        elif rns[0][1] == 0 and area < 400:
-            return(False,0)
-        else:
-            return(True,rns[0][1])
+    #  if the best one was close enough filter further based on number and area
+    #  
+    if (  rns[0][0] >  .35          #.1:
+    or    rns[0][1] == 4 and (area < 200 or area > 310)          
+    or    rns[0][1] == 0 and area < 400 ):
+        return(False,0)
     else:
-        return(False,0)                      #   the blob is not a digit
+        return(True,rns[0][1])
+                    
 
 
 def evalGame(ROI,db):
@@ -119,9 +112,10 @@ if  __name__ == '__main__':
     global db     
     db = 0
     fx = 'pics\sc_sample_terran_1087_267_67_94.png'
+    h,w,ROI = Part(fx,db)
     
-    h,w,ROI = Part(fx,db)      #  ROI   region of interest
-    ROI = cv2.imread('input.png')
+          #  ROI   region of interest
+    ROI = cv2.imread('input.png')    #   uses the last image from mainloop
     cvs(db, ROI, 'input')
     listx = evalGame(ROI,db)
     print 'eval game returns',listx    
