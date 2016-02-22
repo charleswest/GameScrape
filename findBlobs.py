@@ -41,7 +41,7 @@ def  findBlobs(imx,ms,mx,erd,db,tval=127):
   
     Erd = erd
     Drd = int(Erd/2) 
-    print 'This is find blobs  1.0 ms {} mx {} erd {} drd {}'.format( ms, mx , Erd ,Drd)
+    if db: print 'This is find blobs  1.0 ms {} mx {} erd {} drd {}'.format( ms, mx , Erd ,Drd)
     imgray = cv2.cvtColor(imx,cv2.COLOR_BGR2GRAY)
     ret,thresh = cv2.threshold(imgray,tval,255,0)
     thresh = erode(thresh,Erd)

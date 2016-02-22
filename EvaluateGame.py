@@ -1,6 +1,6 @@
 """
 This program loads each image in the   directory
-and looks for user input to create the manifest.
+and looks for numbers on the screen.
  
 enter q leave early
 '"""
@@ -22,7 +22,7 @@ def Part(  fx,db):
     ROI =  img[ y1:y2,    x1:x2 ].copy()
     return(h,w,ROI)
 
-def closeUp(cnt):
+def closeUp(cnt,db):
     ''' display a closeup view of a contour.'''
     fx = 'pics\sc_sample_terran_1087_267_67_94.png'      
     h,w,ROI = Part(fx,0)      #  ROI   region of inte
@@ -34,12 +34,12 @@ def closeUp(cnt):
     cv2.drawContours(img,[cnt],0,(255,255,255),1)
     imgx =    img.copy()
   #  imgy =  cv2.resize(img, ( nw, int (nh) )  ) 
-    cvs(1,imgx,'close up')
+    cvs(db,imgx,'close up')
     
 
 def evaluate( cnt1,db):
  #   global db
-    closeUp(cnt1)
+    closeUp(cnt1,db)
     path = ("blobs\\*.png" )                
     files = glob.glob(path)
     rn = [] 
@@ -59,7 +59,7 @@ def evaluate( cnt1,db):
         
     #  sort all the results and pick the one with the lowest score
     rns = sorted (rn, key = lambda x:x[0])    
-    print 'rn is ',round(rns[0][0],5), rns[0][1], 'area' ,area
+    if db: print 'rn is ',round(rns[0][0],5), rns[0][1], 'area' ,area
     #  if the best one was close enough filter further based on number and area  
     if rns[0][0] <  .35:   #.1:
         if rns[0][1] == 4 and (area < 200 or area > 310):
@@ -82,21 +82,21 @@ def evalGame(ROI,db):
     img2 = sROI.copy()    #   copy to mark up for display
     Scnt  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
     # sort left to right
-    print ' input is ms {} mx {} tval {}  count {} '\
+    if db: print ' input is ms {} mx {} tval {}  count {} '\
           .format(ms,mx,tx, len(cnt))
     x,y,w,h = boundsBlob(cnt)    #    outer bounds of blob area
-    print (x,y,w,h)
+    if db: print (x,y,w,h)
     tl = (x-10,y-10) ; br = ( x  +  w+10, y+ h+10)       #  10 for more room
     cv2.rectangle(img2,(tl),(br),(255,255,255),1)         # white rectangle
     #cvs( db, img2, ' sROI')
     lx = []
     for i, f in enumerate (Scnt):       # scan left to right sorted contours             
        
-        print ' blob {}'.format(i),
+        if db: print ' blob {}'.format(i),
         # compare blob to our file of tempate blobs 
         ret,n = evaluate(f,db)
         if ret:
-            print 'evaluate returns {}, number {}'.format(ret,n)
+            if db: print 'evaluate returns {}, number {}'.format(ret,n)
             cv2.drawContours(img2,[f],0,(0,255,0),1)    # draw after capture
             cmask = cmask -cmask
             cv2.drawContours(cmask,[f],0,(255,255,255),1)
@@ -108,7 +108,7 @@ def evalGame(ROI,db):
 
 if  __name__ == '__main__':
     global db     
-    db = 1
+    db = 0
     fx = 'pics\sc_sample_terran_1087_267_67_94.png'
     
     h,w,ROI = Part(fx,db)      #  ROI   region of interest

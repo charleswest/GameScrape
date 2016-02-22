@@ -30,12 +30,18 @@ if  __name__ == '__main__':
 ##            print  'a{} b {} c {} '.format(a,b,c)     #eval(line)[1]           
             print 'file>>>>>>>> {} data {} '.format(filen,data)
             n  = eval(data)
-            print n , n[0],  n[-1]       #   sb list first then last
+            st = ''
+            for x in n:                    # reformat data same as lx           
+                st = st + str(x)
+                lsst = list(st)
+                lsst = map(int,lsst)
+            print lsst 
 ##    now we know what to expect we shall see if we can find it
             h,w,ROI = Part(filen,db)
             cv2.imwrite('input.png',ROI)
             lx =evalGame(ROI,db)
-            print 'evalGame returns {} input {}'.format( lx,data) 
+            print 'evalGame returns ',lx
+            print ' input     was   ',lsst 
     cvd()
             
              
