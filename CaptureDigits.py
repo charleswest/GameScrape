@@ -11,16 +11,24 @@ import warnings
 
 global db
 
-
-def Part(  img,db):
+def Part(  fx,db):
+    ''' partition the image and return the ROI '''
+    img = cv2.imread(fx)
     h,w = img.shape[:2]
-    print 'image h {} w {}'.format(h,w)
-    y1  = 0  ; y2 = int(.05 * h)
+    #print 'image h {} w {}'.format(h,w)
+    y1  = .02 * h  ; y2 = int(.04 * h)
     x1  = int (.75 * w)  ; x2 = int(w)  
- 
-    a =  img[ y1:y2,    x1:x2 ].copy()   
+    ROI =  img[ y1:y2,    x1:x2 ].copy()
+    return(h,w,ROI)
+##def Part(  img,db):
+##    h,w = img.shape[:2]
+##    print 'image h {} w {}'.format(h,w)
+##    y1  = .02 * h  ; y2 = int(.04 * h)
+##    x1  = int (.75 * w)  ; x2 = int(w)  
+## 
+##    a =  img[ y1:y2,    x1:x2 ].copy()   
     
-    return([h,w,a])
+##    return([h,w,a])
 def capture(f,j):
     ''' write out the ith blob to a file'''
     x,y,w,h = cv2.boundingRect(f)
@@ -35,10 +43,9 @@ if  __name__ == '__main__':
     global db     
     db = 0
     fil = "pics\sc_sample_terran_177_438_101_129.png"
-#    fil = 'input.png'
-    img = cv2.imread(fil)
+    #fil = 'input.png'
  
-    h,w,c1 = Part(img,db)
+    h,w,c1 = Part(fil,db)
     cvs(db,c1)
     h,w = c1.shape[:2]
     cut = cv2.resize(c1,(2*w,2*h))  

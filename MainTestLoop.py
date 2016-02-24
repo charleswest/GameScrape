@@ -36,13 +36,17 @@ if  __name__ == '__main__':
             
 ##    now we know what to expect we shall see if we can find it
             h,w,ROI = Part(filen,db)
-            cv2.imwrite('input.png',ROI)
+            
             lx =evalGame(ROI,db)
             print 'evalGame returns ',lx
             print ' input     was   ',lsst
             if lx == lsst:
                 c += 1
                 print '****',
+            else:
+                cv2.imwrite('input.png',ROI)   # save the problem page
+                for rn,n in zip(lx,lsst):
+                    if rn != n : print rn, n   #  highlight the problems
             p = 100.0 *c / (i+1)
             print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))
             
