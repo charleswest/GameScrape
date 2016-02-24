@@ -39,12 +39,12 @@ def evaluate( cnt1,db):
     path = ("blobs\\*.png" )                
     files = glob.glob(path)
     rn = [] 
-    for n,f in enumerate(files):                
-        #if db: print 'Blob  ', f[-5:-4],       
+    for xn,f in enumerate(files):                
+        n   = int(f[-5:-4])                    #get n from filename       
         img = cv2.imread(f,0)                  # read a digit 
         h,w = img.shape[:2]
 
-        #print 'pixels {}, w {} h {} '.format( np.sum(img)/255,w,h) 
+        
         ret, contours,hierarchy = cv2.findContours(img,2,1)
         cnt2 = contours[0]
         
@@ -62,7 +62,7 @@ def evaluate( cnt1,db):
     or    n == 4 and (area < 200 or area > 310)          
     or    n == 0 and area < 400 ):
         return(False,0)
-    elif  dist >  .15:
+    elif  dist >  .2:
         return(True,eval2(cnt1,db))
     else:
         return(True,n)
@@ -101,12 +101,12 @@ def evalGame(ROI,db):
         # compare blob to our file of tempate blobs
         #tmpeval(f,db)                      #  explore alternate evaluation
         ret,n = evaluate(f,db)
-        if ret:
-            if db: print 'evaluate returns {}, number {}'.format(ret,n)
+        if ret:          
             cv2.drawContours(img2,[f],0,(0,255,0),1)    # draw after capture
             cmask = cmask -cmask
             cv2.drawContours(cmask,[f],0,(255,255,255),1)
             lx.append(n)
+            if db: print '>>>evaluate {}  number {}   <<<'.format(lx,n)
             #cvs(0,cmask,'cmask')
             cvs(db,img2,'evaluate')
             
@@ -126,12 +126,12 @@ def eval2(cnt1,db):
  #       print c[0][0]                      move blob to pos 1,1
         numb= [
                (111, 0),
-                (66, 1),
+                (75, 1),
                (225, 2),
                (186, 3),
                (168, 5),
                (108, 6),
-                (78, 7),
+                (79, 7),
                (114, 8),
                (213, 9)
               ]    

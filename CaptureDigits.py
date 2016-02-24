@@ -35,8 +35,9 @@ if  __name__ == '__main__':
     global db     
     db = 0
     fil = "pics\sc_sample_terran_1475_3612_200_200.png"
+#    fil = 'input.png'
     img = cv2.imread(fil)
-    if not fil == "input.png":  cv2.imwrite("input.png",img)
+ 
     h,w,c1 = Part(img,db)
     cvs(db,c1)
     h,w = c1.shape[:2]
