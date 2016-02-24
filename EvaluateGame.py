@@ -47,24 +47,27 @@ def evaluate( cnt1,db):
         #print 'pixels {}, w {} h {} '.format( np.sum(img)/255,w,h) 
         ret, contours,hierarchy = cv2.findContours(img,2,1)
         cnt2 = contours[0]
-
-        ret = cv2.matchShapes(cnt1,cnt2,1,0.0)
-        area = cv2.contourArea(cnt1)
-        if db: print 'dist from number {} is {} area is {}'.format( n, round(ret,5),area)
-        rn.append( (ret,n) )     #  list of result from matchShapes 
         
-    #  sort all the results and pick the one with the lowest score
-    rns = sorted (rn, key = lambda x:x[0])    
+        dist = cv2.matchShapes(cnt1,cnt2,1,0.0)
+        area = cv2.contourArea(cnt1)
+        if db: print 'dist from number {} is {} area is {}'.format( n, round(dist,5),area)
+        rn.append( (dist,n) )     #  list of result from matchShapes 
+        
+    #  pick the one with the lowest score
+    (dist,n) = min(rn, key = lambda (dist,n): dist )         #   minimum distence  
     if db: print 'rn is ',round(rns[0][0],5), rns[0][1], 'area' ,area
     #  if the best one was close enough filter further based on number and area
     #  
-    if (  rns[0][0] >  .35          #.1:
-    or    rns[0][1] == 4 and (area < 200 or area > 310)          
-    or    rns[0][1] == 0 and area < 400 ):
+    if (  dist >  .35          #.1:
+    or    n == 4 and (area < 200 or area > 310)          
+    or    n == 0 and area < 400 ):
         return(False,0)
     else:
-        return(True,rns[0][1])
-                    
+        return(True,eval2(cnt1,db))
+##    if dist < .35:
+##        return (True,eval2(cnt1,db))
+##    else:
+##        return(False,0)
 
 
 def evalGame(ROI,db):
@@ -95,7 +98,8 @@ def evalGame(ROI,db):
     for i, f in enumerate (Scnt):       # scan left to right sorted contours             
        
         if db: print ' blob {}'.format(i),
-        # compare blob to our file of tempate blobs 
+        # compare blob to our file of tempate blobs
+        #tmpeval(f,db)                      #  explore alternate evaluation
         ret,n = evaluate(f,db)
         if ret:
             if db: print 'evaluate returns {}, number {}'.format(ret,n)
@@ -107,6 +111,41 @@ def evalGame(ROI,db):
             cvs(db,img2,'evaluate')
             
     return lx                   # list of numbers in the panel
+def eval2(cnt1,db):
+    ''' match the incomming contour against the set of binary patterns.
+        replace files by binary patterns with a high low equal value
+        start with just upper/lower to try and weed out 5 and 2
+'''
+    
+    ''' we need to zero base the x's  and y's in   cnt1 '''
+    x1 = tuple(cnt1[cnt1[:,:,0].argmin()][0])    # leftmost
+    y1 = tuple(cnt1[cnt1[:,:,1].argmin()][0])    #  topmost 
+    for c in cnt1:
+        c[0][0] = c[0][0] + 1 - x1[0]
+        c[0][1] = c[0][1] + 1 - y1[1]
+ #       print c[0][0]                      move blob to pos 1,1
+        numb= [
+               (111, 0),
+                (66, 1),
+               (225, 2),
+               (186, 3),
+               (168, 5),
+               (108, 6),
+                (78, 7),
+               (114, 8),
+               (213, 9)
+              ]    
+ #   print 'cnt1', cnt1
+    h=25; w=35
+    imgB = np.zeros((h,w,3), np.uint8)              # empty black window
+    cv2.drawContours(imgB,[cnt1],0,(255,255,255),1)
+    cv2.rectangle(imgB,(0,0),(w,h/2),(0,0,0),-1)    # solid fill rectangle
+    xn = np.sum(imgB)/255
+    mx,n = min(numb,key= lambda xx: abs(xx[0] -xn)  )
+    if db: print  'BW sum {} looks like {}'.format(xn,n)
+    imgB = cv2.resize(imgB,(4*w,4*h))
+    cvs(db,imgB,'half black')
+    return(n)
 
 if  __name__ == '__main__':
     global db     
