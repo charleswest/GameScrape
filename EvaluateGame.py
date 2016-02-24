@@ -55,19 +55,19 @@ def evaluate( cnt1,db):
         
     #  pick the one with the lowest score
     (dist,n) = min(rn, key = lambda (dist,n): dist )         #   minimum distence  
-    if db: print 'rn is ',round(rns[0][0],5), rns[0][1], 'area' ,area
+    if db: print 'rn is ',round(dist,5), n, 'area' ,area
     #  if the best one was close enough filter further based on number and area
     #  
     if (  dist >  .35          #.1:
     or    n == 4 and (area < 200 or area > 310)          
     or    n == 0 and area < 400 ):
         return(False,0)
-    else:
+    elif  dist >  .15:
         return(True,eval2(cnt1,db))
-##    if dist < .35:
-##        return (True,eval2(cnt1,db))
-##    else:
-##        return(False,0)
+    else:
+        return(True,n)
+       
+
 
 
 def evalGame(ROI,db):
@@ -97,7 +97,7 @@ def evalGame(ROI,db):
     lx = []
     for i, f in enumerate (Scnt):       # scan left to right sorted contours             
        
-        if db: print ' blob {}'.format(i),
+        if db: print ' blob {}'.format(i)
         # compare blob to our file of tempate blobs
         #tmpeval(f,db)                      #  explore alternate evaluation
         ret,n = evaluate(f,db)
@@ -149,11 +149,11 @@ def eval2(cnt1,db):
 
 if  __name__ == '__main__':
     global db     
-    db = 0
+    db = 1
     fx = 'pics\sc_sample_terran_1087_267_67_94.png'
     h,w,ROI = Part(fx,db)
     
-          #  ROI   region of interest
+    #  ROI   region of interest
     ROI = cv2.imread('input.png')    #   uses the last image from mainloop
     cvs(db, ROI, 'input')
     listx = evalGame(ROI,db)

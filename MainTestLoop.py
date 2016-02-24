@@ -15,8 +15,6 @@ from findBlobs import findBlobs, boundsBlob, stdSize
 from EvaluateGame import evalGame, Part
 import warnings 
 print __doc__
-
-    
 if  __name__ == '__main__':
     global db     
     db = 0

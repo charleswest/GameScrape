@@ -11,10 +11,10 @@ Operation is as follows:
 2.  Run CaptureDigits to obtain sample number from some of the screens.   We only need 0 thru 9.
     These will be written to the main directory.   They should be checked and moved to blobs.
 
-3.  EvaluateGame looks at a screen and attempts to determine what number are on the screen.  It 
+3.  EvaluateGame looks at a screen and attempts to determine what numbers are on the screen.  It 
     returns a list of the numbers it finds.
 
 4.  MainTestLoop runs EvaluateGame on every game to compare it's output to what we already have on
-    testfile.txt.  
+    testfile.txt.  MainTest keep a running total of correct results. 
  
 

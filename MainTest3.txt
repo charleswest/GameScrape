@@ -1,0 +1,48 @@
+ 
+This program loads each image in the   directory
+and reads the manifest to provide a score for the
+evaluation
+ 
+enter q to leave early
+
+file>>>>>>>> pics\sc2_sample_game_screen.png  
+evalGame returns  [3, 6, 0, 1, 7, 2, 3]
+ input     was    [3, 6, 0, 1, 7, 2, 3]
+1 correct out of 1   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_1087_267_67_94.png  
+evalGame returns  [1, 0, 8, 7, 2, 6, 6, 7, 9, 4]
+ input     was    [1, 0, 8, 7, 2, 6, 7, 6, 7, 9, 4]
+1 correct out of 2   50.0 pct
+file>>>>>>>> pics\sc_sample_terran_114_112_22_38.png  
+evalGame returns  [1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+ input     was    [1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+2 correct out of 3   66.667 pct
+file>>>>>>>> pics\sc_sample_terran_1452_835_95_148.png  
+evalGame returns  [7, 4, 5, 5, 8, 3, 5, 9, 5, 1, 4, 8]
+ input     was    [1, 4, 5, 2, 8, 3, 5, 9, 5, 1, 4, 8]
+2 correct out of 4   50.0 pct
+file>>>>>>>> pics\sc_sample_terran_1475_3612_200_200.png  
+evalGame returns  [1, 4, 7, 5, 3, 6, 7, 2, 2, 0, 0, 5, 0, 0]
+ input     was    [1, 4, 7, 5, 3, 6, 1, 2, 2, 0, 0, 2, 0, 0]
+2 correct out of 5   40.0 pct
+file>>>>>>>> pics\sc_sample_terran_177_438_101_129.png  
+evalGame returns  [7, 7, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+ input     was    [1, 7, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+2 correct out of 6   33.333 pct
+file>>>>>>>> pics\sc_sample_terran_302_1312_168_188.png  
+evalGame returns  [3, 0, 2, 1, 3, 1, 5, 1, 1, 9, 1, 8, 8]
+ input     was    [3, 0, 2, 1, 3, 1, 2, 1, 6, 8, 1, 8, 8]
+2 correct out of 7   28.571 pct
+file>>>>>>>> pics\sc_sample_terran_324_260_42_54.png  
+evalGame returns  [3, 2, 4, 2, 6, 0, 4, 5, 5, 4]
+ input     was    [3, 2, 4, 2, 6, 0, 4, 2, 5, 4]
+2 correct out of 8   25.0 pct
+file>>>>>>>> pics\sc_sample_terran_69_148_27_38.png  
+evalGame returns  [6, 6, 8, 5, 1, 3, 8]
+ input     was    [6, 9, 1, 4, 8, 2, 7, 3, 8]
+2 correct out of 9   22.222 pct
+file>>>>>>>> pics\sc_sample_zerg_99_20_19_18_red.png  
+evalGame returns  [9, 9, 2, 0]
+ input     was    [9, 9, 2, 0, 1, 9, 1, 8]
+2 correct out of 10   20.0 pct
+>>> 
