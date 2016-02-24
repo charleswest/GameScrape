@@ -17,22 +17,15 @@ def Part(  fx,db):
     h,w = img.shape[:2]
     #print 'image h {} w {}'.format(h,w)
     y1  = .02 * h  ; y2 = int(.04 * h)
-    x1  = int (.75 * w)  ; x2 = int(w)  
+    x1  = int (.79  * w)  ; x2 = int(w)  
     ROI =  img[ y1:y2,    x1:x2 ].copy()
     return(h,w,ROI)
-##def Part(  img,db):
-##    h,w = img.shape[:2]
-##    print 'image h {} w {}'.format(h,w)
-##    y1  = .02 * h  ; y2 = int(.04 * h)
-##    x1  = int (.75 * w)  ; x2 = int(w)  
-## 
-##    a =  img[ y1:y2,    x1:x2 ].copy()   
-    
-##    return([h,w,a])
-def capture(f,j):
+
+def capture(f,j,mask):
+    global db
     ''' write out the ith blob to a file'''
     x,y,w,h = cv2.boundingRect(f)
-    blb = cmask[y-1:y+h+1, x-1:x+w+1].copy()     #   capture the thresholded img
+    blb =  mask[y-1:y+h+1, x-1:x+w+1].copy()     #   capture the thresholded img
                                                  #    with a 1 pxl border
    # x = cvs(1,blb,'blbx')
     cv2.imwrite('ablob{}.png'.format(j),blb)
@@ -68,7 +61,7 @@ if  __name__ == '__main__':
                    
         cv2.drawContours(img2,[f],0,(0,255,0),3)    # draw after capture
         x = cvs(1,img2,'blobs')        # x is keypress from cvs
-        if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x)    # for ms = 50     
+        if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x,cmask)    # for ms = 50     
     cv2.imwrite('\pics\blobs.png',cut)
     cvd()
     print('end gam1')

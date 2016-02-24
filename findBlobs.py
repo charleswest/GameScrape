@@ -63,10 +63,9 @@ def  findBlobs(imx,ms,mx,erd,db,tval=127):
        cntp = cv2.approxPolyDP(con, 0.02*cnt_len, True)
  #      print len(cntp)  #    look for suitable contours
        x,y,w,h = cv2.boundingRect(con)
-       asp = abs(  w - h  )
        #if db: print 'abs|w-h| {}  w {} h {} '.format(asp,w,h)
        if (  len(cntp) > 3                   # at least 4  
-             and  asp > .1                      # ie not round or square
+                             
              and  area > ms
              and  area < mx  ):          # note (   ...   ) for implied continuation
             rvl.append(con)
@@ -88,7 +87,7 @@ if __name__ == '__main__':
     h,w = img.shape[:2]  
  
     #cvs(db,img)
-    ms =  325;    mx = 10000;  erd =12; tx=160
+    ms =  325;    mx = 1000;  erd =0; tx=127
     ms = 0;  erd = 0
     (cnt,cmask) =  findBlobs( img,ms,mx,erd,db,tx) # will modify img to show cnt
     cnt  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
@@ -101,11 +100,12 @@ if __name__ == '__main__':
     for i, f in enumerate (cnt):
         
         cv2.drawContours(img,[f],0,(255,0,0),2)
-##        x,y,w,h = cv2.boundingRect(f)
-##        a =  cv2.contourArea(f)
-##        asp = round(abs( 1.00 - float(w)/float(h) ),2)
-##        print 'x {}  y {}\tw {}\th {}\ta {}\tasp {} '.format( x, y , w, h,a,asp)
+        x,y,w,h = cv2.boundingRect(f)
+        a =  cv2.contourArea(f)
+#        asp = round(abs( 1.00 - float(w)/float(h) ),2)
+        print 'x {}  y {}\tw {}\th {}\ta {}  '.format( x, y , w, h,a )
+        cvs(1,img )
     cvs(1,cmask)    
-    cvs(1,img,t=0)
+    
  
     cvd()

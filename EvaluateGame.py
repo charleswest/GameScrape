@@ -11,10 +11,10 @@ import numpy as np
 import cv2
 from cwUtils import cvd, cvs
 from findBlobs import findBlobs, boundsBlob, stdSize
-from CaptureDigits import Part
+from CaptureDigits import Part, capture
 import warnings 
 print __doc__
-
+qq
 def closeUp(cnt,db):
     ''' display a closeup view of a contour.'''
     img = np.zeros((120,960,3), np.uint8)          # empty black window   
@@ -57,8 +57,6 @@ def evaluate( cnt1,db):
     else:
         return(True,n)
 
-
-
 def evalGame(ROI,db):
     ''' we obtain the ROI region of interest  from Part or as input from the
         last screen processed by Maintest.   We look for blob in the ROI and
@@ -97,7 +95,8 @@ def evalGame(ROI,db):
             lx.append(n)
             if db: print '>>>evaluate {}   <<<'.format(lx)
             #cvs(0,cmask,'cmask')
-            cvs(db,img2,'evaluate')
+            x= cvs(db,img2,'evaluate')
+            if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x)  
             
     return lx                   # list of numbers in the panel
 
