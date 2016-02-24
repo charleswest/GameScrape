@@ -23,11 +23,11 @@ if  __name__ == '__main__':
     tfile = 'testFile.txt'          #   may need some manual edits
     c = [0,0,0] ; f = [0,0,0]
     correct = 0; failed = 0;
-    with open(tfile,'r' ) as fr:     
-        for line in fr:  
+    with open(tfile,'r' ) as fr:
+        c = 0    #  total correct
+        for i,line in enumerate(fr):  
 
-            data,b,filen = line.split()     #  ignore b data for now
-##            print  'a{} b {} c {} '.format(a,b,c)     #eval(line)[1]           
+            data,b,filen = line.split()     #  ignore b data for now    
             print 'file>>>>>>>> {}  '.format(filen)
             n  = eval(data)
             st = ''
@@ -41,7 +41,12 @@ if  __name__ == '__main__':
             cv2.imwrite('input.png',ROI)
             lx =evalGame(ROI,db)
             print 'evalGame returns ',lx
-            print ' input     was   ',lsst 
+            print ' input     was   ',lsst
+            if lx == lsst:
+                c += 1
+            p = 100.0 *c / (i+1)
+            print '{} correct out of {}   {} pct'.format(c,1+i,round(p,3))
+            
     cvd()
             
              
