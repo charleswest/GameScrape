@@ -34,7 +34,7 @@ if  __name__ == '__main__':
     print __doc__
     global db     
     db = 0
-    fil = "pics\sc_sample_terran_1475_3612_200_200.png"
+    fil = "pics\sc_sample_terran_177_438_101_129.png"
 #    fil = 'input.png'
     img = cv2.imread(fil)
  

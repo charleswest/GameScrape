@@ -42,8 +42,9 @@ if  __name__ == '__main__':
             print ' input     was   ',lsst
             if lx == lsst:
                 c += 1
+                print '****',
             p = 100.0 *c / (i+1)
-            print '{} correct out of {}   {} pct'.format(c,1+i,round(p,3))
+            print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))
             
     cvd()
             
