@@ -26,27 +26,17 @@ if  __name__ == '__main__':
         for i,line in enumerate(fr):  
 
             data,b,filen = line.split()     #  ignore b data for now    
-            print 'file>>>>>>>> {}  '.format(filen)
-            n  = eval(data)
-            st = ''
-            for x in n:                    # reformat data same as lx           
-                st = st + str(x)
-                lsst = list(st)
-                lsst = map(int,lsst)
-            
-##    now we know what to expect we shall see if we can find it
-            h,w,ROI = Part(filen,db)
-            
-            lx =evalGame(ROI,db)
+            print 'file < {} >>>>>>>> {}  '.format(i+1 ,filen)            
+            dn  = eval(data)
+            print 'input was        ' , dn
+##    now we know what to expect we shall see if we can find it           
+            lx =evalGame(filen,db)
             print 'evalGame returns ',lx
-            print ' input     was   ',lsst
-            if lx == lsst:
+            if lx == dn:
                 c += 1
-                print '****',
-            else:
-                cv2.imwrite('input.png',ROI)   # save the problem page
-                for rn,n in zip(lx,lsst):
-                    if rn != n : print rn, n   #  highlight the problems
+                print '****',       
+                #cv2.imwrite('input.png',ROI)   # save the problem page
+                 
             p = 100.0 *c / (i+1)
             print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))
             

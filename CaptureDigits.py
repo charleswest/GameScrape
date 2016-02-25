@@ -16,10 +16,17 @@ def Part(  fx,db):
     img = cv2.imread(fx)
     h,w = img.shape[:2]
     #print 'image h {} w {}'.format(h,w)
-    y1  = .02 * h  ; y2 = int(.04 * h)
-    x1  = int (.79  * w)  ; x2 = int(w)  
-    ROI =  img[ y1:y2,    x1:x2 ].copy()
-    return(h,w,ROI)
+    y1  = 24  ; y2 = 48
+     
+    x1  =1516  ; x2 = 1920  ; d1 = 135; d2 = 200 ;d=300
+  
+    ROI =  img[ y1:y2,        1516:1575    ].copy()   # 177
+    ROI1 = img[ y1:y2,        1650:1725  ].copy()     # 438
+    ROI2 = img[ y1:y2,        1775:1840  ].copy()    # 101
+    ROI3 = img[ y1:y2,        1850:1900  ].copy()    # 129
+    
+    
+    return(h,w,ROI,ROI1,ROI2,ROI3)
 
 def capture(f,j,mask):
     global db
@@ -34,12 +41,15 @@ def capture(f,j,mask):
 if  __name__ == '__main__':
     print __doc__
     global db     
-    db = 0
+    db = 1
     fil = "pics\sc_sample_terran_177_438_101_129.png"
     #fil = 'input.png'
  
-    h,w,c1 = Part(fil,db)
+    h,w,c1,a,b,c = Part(fil,db)
     cvs(db,c1)
+    cvs(db,a,'a')
+    cvs(db,b,'b')
+    cvs(db,c,'c')
     h,w = c1.shape[:2]
     cut = cv2.resize(c1,(2*w,2*h))  
     ms = 100;   mx = 500; erd = 0; tx = 127

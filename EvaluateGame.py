@@ -26,7 +26,7 @@ def evaluate( cnt1,db):
     ''' match the incomming contour against the set of digits we have stored in
         blobs.  '''
  #   global db
-    closeUp(cnt1,db)
+    #closeUp(cnt1,db)
     path = ("blobs\\*.png" )                
     files = glob.glob(path)
     rn = [] 
@@ -56,7 +56,7 @@ def evaluate( cnt1,db):
     else:
         return(True,n)
 
-def evalGame(ROI,db):
+def evalRegion(ROI,db):
     ''' we obtain the ROI region of interest  from Part or as input from the
         last screen processed by Maintest.   We look for blob in the ROI and
         evaluate them by matching to our recorded set of captured digits.
@@ -95,21 +95,35 @@ def evalGame(ROI,db):
             if db: print '>>>evaluate {}   <<<'.format(lx)
             #cvs(0,cmask,'cmask')
             x= cvs(db,img2,'evaluate')
-            if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x)  
+            if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x)
             
-    return lx                   # list of numbers in the panel
+    nn = 0 ; lx.reverse()   
+    for j, xin in  enumerate(lx):
+        nn = nn + xin * 10**(j)
+    return  nn     #                  as normal decimal number
+            
+#    return lx                   # list of numbers in the panel
+def evalGame(fx,db):
+    lx = []
+    h,w,r1,r2,r3,r4 = Part(fx,db)
+    for ROI in [r1,r2,r3,r4]:
+        cv2.imwrite('input.png',ROI)
+        img = np.zeros((48,100,3), np.uint8)          # empty black window
+        cvs(0,img,'input')
+        cvs(db, ROI, 'input')
+        lx.append(evalRegion(ROI,db))
+    return tuple(lx)
 
 if  __name__ == '__main__':
     global db     
     db = 1
-##    fx = 'pics\sc_sample_terran_302_1312_168_188.png'
-##    h,w,ROI = Part(fx,db)
-##    cv2.imwrite('input.png',ROI)
+    fx = 'pics\sc_sample_terran_302_1312_168_188.png'
+    listx = evalGame(fx,db)
+    print 'eval game returns',listx   
+    
     #  ROI   region of interest
-    ROI = cv2.imread('input.png')    #   uses the last image from mainloop
-    cvs(db, ROI, 'input')
-    listx = evalGame(ROI,db)
-    print 'eval game returns',listx    
+#    ROI = cv2.imread('input.png')    #   uses the last image from mainloop
+    
     cvd()
 
     
