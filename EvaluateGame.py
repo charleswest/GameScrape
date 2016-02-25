@@ -14,7 +14,6 @@ from findBlobs import findBlobs, boundsBlob, stdSize
 from CaptureDigits import Part, capture
 import warnings 
 print __doc__
-qq
 def closeUp(cnt,db):
     ''' display a closeup view of a contour.'''
     img = np.zeros((120,960,3), np.uint8)          # empty black window   
