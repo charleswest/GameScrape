@@ -1,0 +1,58 @@
+Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 20:32:19) [MSC v.1500 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+>>> 
+======== RESTART: C:\Users\charles\Documents\GitHub\GameScrape\MainTestLoop.py ========
+
+This program loads each image in the   directory
+and looks for numbers on the screen.
+ 
+enter q leave early
+'
+
+This program loads each image in the   directory
+and reads the manifest to provide a score for the
+evaluation
+ 
+enter q to leave early
+
+file < 1 >>>>>>>> pics\sc2_sample_game_screen.png  
+input was        >(36, 0, 17, 23)<  
+evalGame returns >(36, 0, 17, 23)<
+**** 1 correct out of 1   100.0 pct
+file < 2 >>>>>>>> pics\sc_sample_terran_1087_267_67_94.png  
+input was        >(1087, 267, 67, 94)<  
+evalGame returns >(1087, 2667, 67, 94)<
+1 correct out of 2   50.0 pct
+file < 3 >>>>>>>> pics\sc_sample_terran_114_112_22_38.png  
+input was        >(114, 112, 22, 38)<  
+evalGame returns >(114, 112, 2238)<
+1 correct out of 3   33.33 pct
+file < 4 >>>>>>>> pics\sc_sample_terran_1452_835_95_148.png  
+input was        >(1452, 835, 95, 148)<  
+evalGame returns >(1452, 835, 95148)<
+1 correct out of 4   25.0 pct
+file < 5 >>>>>>>> pics\sc_sample_terran_1475_3612_200_200.png  
+input was        >(1475, 3612, 200, 200)<  
+evalGame returns >(1475, 36612, 200200)<
+1 correct out of 5   20.0 pct
+file < 6 >>>>>>>> pics\sc_sample_terran_177_438_101_129.png  
+input was        >(177, 438, 101, 129)<  
+evalGame returns >(177, 438, 101, 129)<
+**** 2 correct out of 6   33.33 pct
+file < 7 >>>>>>>> pics\sc_sample_terran_302_1312_168_188.png  
+input was        >(302, 1312, 168, 188)<  
+evalGame returns >(302, 1312, 168188)<
+2 correct out of 7   28.57 pct
+file < 8 >>>>>>>> pics\sc_sample_terran_324_260_42_54.png  
+input was        >(324, 260, 42, 54)<  
+evalGame returns >(324, 2660, 4254)<
+2 correct out of 8   25.0 pct
+file < 9 >>>>>>>> pics\sc_sample_terran_69_148_27_38.png  
+input was        >(69, 148, 27, 38)<  
+evalGame returns >(66, 418, 2738)<
+2 correct out of 9   22.22 pct
+file < 10 >>>>>>>> pics\sc_sample_zerg_99_20_19_18_red.png  
+input was        >(99, 20, 19, 18)<  
+evalGame returns >(99, 20, 0)<
+2 correct out of 10   20.0 pct
+>>> 

@@ -22,7 +22,7 @@ def evaluate( cnt1,db):
     #closeUp(cnt1,db)
     path = ("blobs\\*.png" )                
     files = glob.glob(path)
-    rn = [] 
+    rn = [] ; ssx = False
     for xn,f in enumerate(files):                
         n   = (f[-5:-4])                    #get n from filename       
         img = cv2.imread(f,0)                  # read a digit 
@@ -31,8 +31,10 @@ def evaluate( cnt1,db):
         cnt2 = contours[0]
 
         dist = cv2.matchShapes(cnt1,cnt2,1,0.0)
-        area = cv2.contourArea(cnt1)
-        #if db: print 'dist from number {} is {} area is {}'.format( n, round(dist,5),area)
+        area = cv2.contourArea(cnt2)
+        area1 = cv2.contourArea(cnt1)
+        if db and dist < .5:
+            print 'dist {} {} is {} area is {}'.format(f[6:], n, round(dist,5),area)
         rn.append( (dist,n) )     #  list of result from matchShapes 
         
     #  pick the one with the lowest score
@@ -40,12 +42,14 @@ def evaluate( cnt1,db):
     if db: print 'rn is ',round(dist,5), n, 'area' ,area
     #  if the best one was close enough filter further based on number and area
     #  
-    if (  dist >  .20    #.35          #.1:
-    or    n == '4' and (area < 200 or area > 310)
-    or    n == 8 and (area < 400 )      
-    or    n == '0' and  area < 400  ):
+    if (  dist >  .5    #.35          #.1:
+    or    n == '4' and (area1 < 200 or area1 > 310)
+    or    n == '8' and (area1 < 400 )
+    or    n == 'S' and ssx == True
+    or    n == '0' and  area1 < 400  ):
         return(False,0)
     else:
+        if n == 'S' : ssx = True       #  switch for only one of these
         return(True,n)
 
 def evalRegion(ROI,db):
@@ -108,18 +112,10 @@ def evalGame(fx,db):
         cvs(db, R2x, 'input')
         tlx = evalRegion(R2x,db)
         if 'S' in tlx :
-            s1 = True ; s1x = []; s2x = []
-            for ss in tlx:                
-                if s1:
-                    s1x.append(ss)
-                    if ss == 'S':
-                        s1=False
-                        s1x.pop()
-                        
-                else:
-                    s2x.append(ss)
-                  
-            print 'eg lx{} slx {} s2x {}'.format( lx, s1x,s2x )        
+            inx = tlx.index('S')
+            s1x = tlx[:inx]
+            s2x = tlx[inx+1:]          
+            #print 'eg lx{} slx {} s2x {}'.format( lx, s1x,s2x )        
             lx.append( (nlx(s1x) ))
             lx.append( (nlx(s2x) ))         
         else:        
@@ -129,7 +125,7 @@ def evalGame(fx,db):
 if  __name__ == '__main__':
     global db     
     db = 1
-    fx = 'pics\sc2_sample_game_screen.png'
+    fx = 'pics\sc_sample_terran_114_112_22_38.png'
     listx = evalGame(fx,db)
     print 'eval game returns',listx   
     cvd()
