@@ -20,16 +20,16 @@ def Part(  fx,db):
      
     x1  =1516  ; x2 = 1920  ; d1 = 135; d2 = 200 ;d=300
   
-    ROI =  img[ y1:y2,        1516:1575    ].copy()   # 177
+    ROI =  img[ y1:y2,        1510:1585   ].copy()   # 177
     ROI1 = img[ y1:y2,        1650:1725  ].copy()     # 438
-    ROI2 = img[ y1:y2,        1775:1840  ].copy()    # 101
-    ROI3 = img[ y1:y2,        1850:1900  ].copy()    # 129
+    ROI2 = img[ y1:y2,        1775:1900  ].copy()    # 101
+    ROI3 = img[ y1:y2,        1820:1900  ].copy()    # 129
     
     
     return(h,w,ROI,ROI1,ROI2,ROI3)
 
-def capture(f,j,mask):
-    global db
+def capture(f,j,mask,db):
+    
     ''' write out the ith blob to a file'''
     x,y,w,h = cv2.boundingRect(f)
     blb =  mask[y-1:y+h+1, x-1:x+w+1].copy()     #   capture the thresholded img
@@ -42,7 +42,7 @@ if  __name__ == '__main__':
     print __doc__
     global db     
     db = 1
-    fil = "pics\sc_sample_terran_177_438_101_129.png"
+    fil = "pics\\sc_sample_terran_1087_267_67_94.png"
     #fil = 'input.png'
  
     h,w,c1,a,b,c = Part(fil,db)
@@ -70,8 +70,9 @@ if  __name__ == '__main__':
         # capture blobs
                    
         cv2.drawContours(img2,[f],0,(0,255,0),3)    # draw after capture
+        
         x = cvs(1,img2,'blobs')        # x is keypress from cvs
-        if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x,cmask)    # for ms = 50     
+        if x in [1,2,3,4,5,6,7,8,9,0,'/' ] : capture(f,x,cmask)    # for ms = 50     
     cv2.imwrite('\pics\blobs.png',cut)
     cvd()
     print('end gam1')

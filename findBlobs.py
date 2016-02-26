@@ -19,8 +19,8 @@ def stdSize(imgx,typ):
     
     return imgy.copy()
 def  boundsBlob(grp):
-    # x, y, w, h    given the following x,y pairs
-#     [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
+    if grp == []:
+        return(0,0,0,0)
     x,y = grp[0][0][0]
     mxy = y
     #print x,y
@@ -64,7 +64,7 @@ def  findBlobs(imx,ms,mx,erd,db,tval=127):
  #      print len(cntp)  #    look for suitable contours
        x,y,w,h = cv2.boundingRect(con)
        #if db: print 'abs|w-h| {}  w {} h {} '.format(asp,w,h)
-       if (  len(cntp) > 3                   # at least 4  
+       if (  len(cntp) > 2                   # at least 4  
                              
              and  area > ms
              and  area < mx  ):          # note (   ...   ) for implied continuation
@@ -80,14 +80,11 @@ def  findBlobs(imx,ms,mx,erd,db,tval=127):
 if __name__ == '__main__':
     db = True
     tst = 'wt' 
-    imgx = cv2.imread('input.png') 
-    #imgx = cv2.imread(fn)
-    img = stdSize(imgx,tst)   #cv2.resize(imgx, (1040,410))
-  #  srt = img.copy()
+    img = cv2.imread('input.png') 
     h,w = img.shape[:2]  
  
     #cvs(db,img)
-    ms =  325;    mx = 1000;  erd =0; tx=127
+    ms =  90;    mx = 600;  erd =0; tx=127
     ms = 0;  erd = 0
     (cnt,cmask) =  findBlobs( img,ms,mx,erd,db,tx) # will modify img to show cnt
     cnt  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))

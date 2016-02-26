@@ -21,6 +21,7 @@ if  __name__ == '__main__':
     tfile = 'testFile.txt'          #   may need some manual edits
     c = [0,0,0] ; f = [0,0,0]
     correct = 0; failed = 0;
+    trb = open(tfile.replace('txt','TRB.txt'),'w')
     with open(tfile,'r' ) as fr:
         c = 0    #  total correct
         for i,line in enumerate(fr):  
@@ -28,19 +29,24 @@ if  __name__ == '__main__':
             data,b,filen = line.split()     #  ignore b data for now    
             print 'file < {} >>>>>>>> {}  '.format(i+1 ,filen)            
             dn  = eval(data)
-            print 'input was        ' , dn
+            print 'input was        >{}<  '.format(dn)
 ##    now we know what to expect we shall see if we can find it           
-            lx =evalGame(filen,db)
-            print 'evalGame returns ',lx
+            lxx =evalGame(filen,db)
+            lx = tuple(lxx)
+            print 'evalGame returns >{}<'.format(lx)
+            
             if lx == dn:
                 c += 1
-                print '****',       
-                #cv2.imwrite('input.png',ROI)   # save the problem page
+                print '****',
+            else:
+                trb.write(line)         #   testFile.TRB.txt has the bad ones
+                
                  
             p = 100.0 *c / (i+1)
             print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))
             
     cvd()
+    trb.close()
             
              
 
