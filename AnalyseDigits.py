@@ -90,12 +90,17 @@ def xdebug(c1,c2):
     m2 = cv2.HuMoments(cv2.moments(c2)).flatten()
     mm1 = cv2.moments(c1)
     mm2 = cv2.moments(c2)
-    for m in mm1:
-        print m, '\t\t', mm1[m],'\t\t\t\t', mm2[m]
+##    for m in mm1:
+##        print m, '\t\t', mm1[m],'\t\t\t\t', mm2[m]
     print '  Hu moments '
     for mx, my in zip( m1,m2):
         print mx, '\t\t', my
     print ' '
+def  cmatch(f,cnt2,possible,im):
+##    m1 = cv2.HuMoments(cv2.moments(c1)).flatten()
+##    m2 = cv2.HuMoments(cv2.moments(c2)).flatten()
+    
+    return(99)
     
 if  __name__ == '__main__':
     print __doc__
@@ -117,20 +122,27 @@ if  __name__ == '__main__':
     img,cnt,hier = findNumbers(cut)
     print hier.shape, len(cnt)
     print 'next, prev, 1st c. , parent\n',hier
-    for i, f in enumerate (cnt):                
+    for i, f in enumerate (cnt):     #   for each possible n in the input                
         area = cv2.contourArea(f)
         print ' blob {}  {}  area {} '.format(i,hier[0][i],area  )
-        cv2.drawContours(cxcopy,[f],0,(0,255,255),2)    # draw yellow 
-        if area > 250 and hier[0][i][3] == -1 :         #  no parent          
+        cv2.drawContours(cxcopy,[f],0,(0,255,255),2)    # draw yellow
+        x,y,w,h = cv2.boundingRect(f)
+        
+        if area > 250 and hier[0][i][3] == -1 :         #  no parent
+            possible = img[y:y+h, x:x+w].copy()
+            cvs(1,possible,'possible')
             key = cvs(1,cxcopy,'cxcopy')        #key is keypress from cvs
             if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,img)     
   #          elif True: # key == ord('m') - 48 :
             n = -1; mdist = 999; rnl = []
-            for im,n in zip(digits,labels):
+            for im,n in zip(digits,labels):    #  look at each of the saved numbers
                 im2 = im.copy()
                 ret, contours, hierarchy = cv2.findContours(im2,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
                 cnt2 = contours[0]
                 dist = cv2.matchShapes(f,cnt2,1,0.0)
+                d2 = cmatch(f,cnt2,possible,im)
+ # compare here               
+                print 'd2 {} n {}   {} '.format(d2, n, im.shape[:2] )
                 rnl.append(( dist,n,im))                   
                 cvs(0,im,'match' )
             rnl = sorted (rnl)
