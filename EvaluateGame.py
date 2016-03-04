@@ -14,6 +14,7 @@ from cwUtils import cvd, cvs,erode, dilate
 from findBlobs import findBlobs, boundsBlob, stdSize
 from CaptureDigits import Part, capture, findNumbers
 from digits import *
+from DigitStat import FndN
 import warnings 
 print __doc__
 def closeUp(cnt,db):
@@ -117,6 +118,7 @@ def evalGame(ROI,db):
  #   global db
     h,w = ROI.shape[:2]
     sROI =   cv2.resize(ROI,(3*w,3*h))        #    this may not be a good idea
+    
     cxcopy = sROI.copy()    #   copy to mark up for display                                         # but we did it in CaptureDigits so .. .
     
     cmask,Scnt,hier = findNumbers(sROI)
@@ -127,20 +129,16 @@ def evalGame(ROI,db):
     print 'machine learn SVN',lxx
     lx = []
     for i, f in enumerate (Scnt):                  
-       
-        if db: print ' blob {}'.format(i)
-        # compare blob to our file of template blobs
-        #tmpeval(f,db)                      #  explore alternate evaluation
-        ret,n,x = evaluate(f,db,cxcopy)
-        if ret:          
+        area = cv2.contourArea(f)
+        x,y,w,h = cv2.boundingRect(f)        
+        if area > 250 and hier[0][i][3] == -1 :         #  no parent
+            possible = cmask[y:y+h, x:x+w].copy()       
+            lb,n,t4S,t6LR,t7TB = FndN(possible,0,1)                  
             cv2.drawContours(cxcopy,[f],0,(255,255,0),1)    # draw after capture
             lx.append((x,n))
             if db: print '>>>match evaluate {}   <<<'.format(lx)
-            #cvs(0,cmask,'cmask')
-            key = cvs(db,cxcopy,'evaluate')
-            if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,cmask)
-        
-    lx  =  sorted(lx,key = lambda (a,b):a )
+            cvs(1,cxcopy,'cxcopy')
+    lx  =  sorted(lx,key = lambda (x,n):x )
     lx = [b for (a,b) in lx]
     return lxx  , lx                 # list of numbers in the panel
 
@@ -152,7 +150,7 @@ if  __name__ == '__main__':
     fx2 = 'pics\sc_sample_terran_302_1312_168_188.png'
     fx3 = "pics\sc_sample_terran_177_438_101_129.png"
     fx4 = "pics\sc_sample_terran_1087_267_67_94.png"
-    for f in [fx1] :  #,fx2,fx3,fx4]:
+    for f in [fil] :  #,fx2,fx3,fx4]:
         h,w,ROI = Part(f,db)
     ##    cv2.imwrite('input.png',ROI)
         #  ROI   region of interest

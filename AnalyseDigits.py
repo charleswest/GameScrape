@@ -136,20 +136,7 @@ if  __name__ == '__main__':
             if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,img)     
   #          elif True: # key == ord('m') - 48 :
             n = -1; mdist = 999; rnl = []
-##            for im,n in zip(digits,labels):    #  look at each of the saved numbers
-##                im2 = im.copy()
-##                ret, contours, hierarchy = cv2.findContours(im2,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-##                cnt2 = contours[0]
-##                dist = cv2.matchShapes(f,cnt2,1,0.0)
-##                d2 = cmatch(f,cnt2,possible,im)
-## # compare here               
-##                print 'd2 {} n {}   {} '.format(d2, n, im.shape[:2] )
-##                rnl.append(( dist,n,im))                   
-##                cvs(0,im,'match' )
-##            rnl = sorted (rnl)
-##            for (rd, n, im)  in rnl:
-##                print 'rtn  dist {} from {}'.format(round(rd,3), n)
-##                cv2.drawContours(cxcopy,[f],0,(0,255,0),2)  # green
+
             lb,n,t4S,t6LR,t7TB = FndN(possible,0,1)
             print 'match returns {}  '.format(n )
             key = cvs(1,possible,'match')
