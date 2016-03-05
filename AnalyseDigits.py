@@ -102,20 +102,9 @@ def  cmatch(f,cnt2,possible,im):
 ##    m2 = cv2.HuMoments(cv2.moments(c2)).flatten()
     
     return(99)
-    
-if  __name__ == '__main__':
-    print __doc__
-    global db     
-    db = 0
-    fil = "pics\sc_sample_terran_177_438_101_129.png"
-    #fil = "pics\sc_sample_terran_1452_835_95_148.png"
-    #fil = "pics\sc_sample_terran_1087_267_67_94.png"
-    #fil = 'input.png'
- 
-    h,w,c1 = Part(fil,db)
-    #cvs(db,c1)
-    h,w = c1.shape[:2]
-    cut = cv2.resize(c1,(3*w,3*h))
+def evalGame(ROI,db):
+    h,w = ROI.shape[:2]
+    cut = cv2.resize(ROI,(3*w,3*h))
     cut = erode(cut,1)
     cxcopy = cut.copy()
     ## load the saved digits list
@@ -123,6 +112,7 @@ if  __name__ == '__main__':
     img,cnt,hier = findNumbers(cut)
     print hier.shape, len(cnt)
     print 'next, prev, 1st c. , parent\n',hier
+    lx = []
     for i, f in enumerate (cnt):     #   for each possible n in the input                
         area = cv2.contourArea(f)
         print ' blob {}  {}  area {} '.format(i,hier[0][i],area  )
@@ -142,8 +132,26 @@ if  __name__ == '__main__':
             key = cvs(1,possible,'match')
             if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,img)
             elif key == ord('z') -48: xdebug(f,cnt2)
+            else: lx.append((x,n))
+    lx  =  sorted(lx,key = lambda (x,n):x )
+    lx = [b for (a,b) in lx]
+    return  lx              
+            
+if  __name__ == '__main__':
+    print __doc__
+    global db     
+    db = 0
+    fil = "pics\sc_sample_terran_177_438_101_129.png"
+    fil = "pics\sc_sample_terran_1452_835_95_148.png"
+    #fil = "pics\sc_sample_terran_1087_267_67_94.png"
+    #fil = 'input.png'
+ 
+    h,w,ROI = Part(fil,db)
+    #cvs(db,c1)
+    lx = evalGame(ROI,db)
+    print lx
                     
-    cv2.imwrite('\pics\blobs.png',cut)
+   
     cvd()
     print('end gam1')
     

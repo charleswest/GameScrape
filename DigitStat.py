@@ -1,4 +1,4 @@
-''' load and analyse numbers '''
+''' load and analyse numbers  DigitStat'''
 import numpy as np
 import cv2
 from cwUtils import cvd, cvs, erode, dilate
@@ -50,16 +50,17 @@ def FndN(d,lb=0,db=0):
     t7TB =  abs(t3-t4)
     n = 99; pl = []
  
-    if t4S < 16       and t7TB < 15:        n = 8
-    elif t6LR < 20   and t7TB > 50:         n = 2
-    elif t6LR < 20   and t7TB > 20:         n = 0
-    elif t6LR < 50   and t7TB > 100:        n = 5
-    elif t6LR < 50   and t7TB > 30:         n = 9
-    elif t6LR < 50   and t7TB <= 30:        n = 6
-    elif t6LR < 88   and t7TB >= 130:       n = 7
-    elif t6LR < 100  and t7TB >= 50:        n = 4   
-    elif t6LR >= 100  and t7TB < 50:        n = 3
-    else:                                   n = 1
+    if t4S < 30       and t7TB < 20:         n = 8
+    elif t6LR < 40    and t7TB > 100:        n = 5
+    elif t6LR < 20    and t7TB > 50:         n = 2
+    elif t6LR < 15    and t7TB > 20:         n = 0
+   
+    elif t6LR < 50    and t7TB > 30:         n = 9
+    elif t6LR < 50    and t7TB <= 30:        n = 6
+    elif t6LR < 88    and t7TB >= 130:       n = 7
+    elif t6LR < 110   and t7TB >= 50:        n = 4   
+    elif t6LR >= 100  and t7TB < 50:         n = 3
+    else:                                    n = 1
     if db :print  ('{}\t{}\t{}\t{}\t{}'
             .format(lb,n,t4S,t6LR,t7TB))
     return(lb,n,t4S,t6LR,t7TB)
