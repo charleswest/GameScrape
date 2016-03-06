@@ -16,6 +16,7 @@ from CaptureDigits import Part, capture
 from AnalyseDigits import  findNumbers
 from digits import *
 from DigitStat import FndN
+from printsort import printsort
 import warnings 
 print __doc__
 
@@ -40,7 +41,7 @@ def cwload_digits(fn):
     return(digits,labels)    
 
 
-def evalGame(ROI,db):
+def evalGame(ROI,db,fd,rn):
     ''' we obtain the ROI region of interest  from Part or as input from the
         last screen processed by Maintest.   We look for blob in the ROI and
         evaluate them by matching to our recorded set of captured digits.
@@ -52,17 +53,21 @@ def evalGame(ROI,db):
     cxcopy = sROI.copy()    #   copy to mark up for display                                         # but we did it in CaptureDigits so .. .
     cmask,Scnt,hier = findNumbers(sROI)
     cvs(1,cxcopy,'cxcopy')
-    lx = [] ; ly = []
+    lx = [] ; ly = [] ; j = -1
+    
     for i, f in enumerate (Scnt):                  
         area = cv2.contourArea(f)
         x,y,w,h = cv2.boundingRect(f)
         cv2.drawContours(cxcopy,[f],0,(0,0,255),2)
-        #print 'area {} hier {}'.format(area, hier [0][i]) 
+        #print 'area {} hier {}'.format(area, hier [0][i])
+       
         if (area > 250
             and hier[0][i][3] == -1
             and  x <> 363):        #  no parent
+            j = j + 1
             possible = cmask[y:y+h, x:x+w].copy()       
-            lb,n,t4S,t6LR,t7TB = FndN(possible,x,1)                  
+            [lb,n,t0,t1,t2,t3,t4,t4S,t6LR,t7TB]  = FndN(possible,rn[j],1)
+            fd.write('{} {} {} {} {} {} {} {} {} {} \n'.format(lb,n,t0,t1,t2,t3,t4,t4S,t6LR,t7TB   ))
             cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
             lx.append((x,n))
             ly.insert(0,n)                         # approximate order
@@ -80,13 +85,20 @@ if  __name__ == '__main__':
     fx2 = 'pics\sc_sample_terran_302_1312_168_188.png'
     fx3 = "pics\sc_sample_terran_177_438_101_129.png"
     fx4 = "pics\sc_sample_terran_1087_267_67_94.png"
-    for f in [fx0,fx1,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
+
+    rn0 = '177438101129'
+    rn1 = '145283595148'
+    dfile = 'digits.txt'
+    fd = open(dfile,'w')
+    for f,rn in zip( [fx0,fx1],[rn0,rn1]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
         h,w,ROI = Part(f,db)
-        print '\tn \tt4S \tt6LR \tt7TB'
-        listx = evalGame(ROI,db)
+        listx = evalGame(ROI,db,fd,rn[::-1])    #  ::-1 is string reverse
         print 'eval game Harr      ',listx    
         #print 'eval game MatchShape',listy
         print f
+        
+    fd.close()
+    printsort()
     cvd()
 
     

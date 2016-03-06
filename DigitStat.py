@@ -32,7 +32,7 @@ def FndN(d,lb=0,db=0):
     t0 = np.sum(im2) / 255
 
     d[:, w/2:] = 0        # same as bitwise and
-    t1 = np.sum(d)/255
+    L = np.sum(d)/255
 
     d = im2.copy()
     d[:, :w/2] = 0
@@ -45,38 +45,38 @@ def FndN(d,lb=0,db=0):
     d = im2.copy()         #  lower half
     d[ :h/2, : ] = 0
     t4 = np.sum(d)/255
-    t4S =  ( max(t1,t2,t3,t4) - min(t1,t2,t3,t4)) 
-    t6LR =  abs(t1-t2) 
-    t7TB =  abs(t3-t4)
+    S =  ( max(L,t2,t3,t4) - min(L,t2,t3,t4)) 
+    LR =  abs(L-t2) 
+    TB =  abs(t3-t4)
     n = 99; pl = []
- 
-    if t4S < 30       and t7TB < 20:         n = 8
-    elif t6LR < 40    and t7TB > 100:        n = 5
-    elif t6LR < 20    and t7TB > 50:         n = 2
-    elif t6LR < 15    and t7TB > 20:         n = 0
+     
+    if t0> 512 and L >385 and S< 150 and TB <90  and abs(S-TB)<5:   n = 8
+    elif LR < 40    and TB > 100:        n = 5
+    elif LR < 20    and TB > 50:         n = 2
+    elif t0> 512 and L <385 and S< 150 and TB <90 and TB == S:    n = 0
    
-    elif t6LR < 50    and t7TB > 30:         n = 9
-    elif t6LR < 50    and t7TB <= 30:        n = 6
-    elif t6LR < 88    and t7TB >= 130:       n = 7
-    elif t6LR < 110   and t7TB >= 50:        n = 4   
-    elif t6LR >= 100  and t7TB < 50:         n = 3
-    else:                                    n = 1
-    if db :print  ('{}\t{}\t{}\t{}\t{}'
-            .format(lb,n,t4S,t6LR,t7TB))
-    return(lb,n,t4S,t6LR,t7TB)
+    elif LR < 50    and TB > 30:         n = 9
+    elif LR < 50    and TB <= 30:        n = 6
+    elif LR < 88    and TB >= 130:       n = 7
+    elif LR < 110   and TB >= 50:        n = 4   
+    elif LR >= 100  and TB < 50:         n = 3
+    else:                                n = 1
+    lb = int(lb)
+    return[lb,n,t0,L,t2,t3,t4,S,LR,TB ]
 
 if  __name__ == '__main__':
     print __doc__
     digits, labels =     cwload_digits_lst("blobs\\aML*.png" )
-    print 'lb\tn \tt4S\t6LR\t7TB '
-    rtn = []
-    for d , lb in zip(digits,labels):
-        lb,n,t4S,t6LR,t7TB = FndN(d,lb,0)
-        rtn.append((lb,n,t4S,t6LR,t7TB))
 
-    rtn = sorted(rtn, key = lambda (lb,n,t4S,t6LR,t7TB):t6LR)
-    for (lb,n,t4S,t6LR,t7TB) in rtn:
-        print  ('{}\t{}\t{}\t{}\t{}'
-            .format(lb,n,t4S,t6LR,t7TB))
-    cvd()
-        # w < 30 is a 1
+    dts = np.zeros((10,13),dtype='int32' )   
+    for d , lb in zip(digits,labels):      
+        lb,n,t0,L,t2,t3,t4,S,LR,TB = FndN(d,lb,0)
+        dts[lb] = [lb,  n,  t0 , L, S,LR,TB, t0<512, L<385,S<150,LR<150,TB<90,TB==S]
+        
+    head =   '''[  lb   n,t0, L,   S,  LR, TB t0<512,  S<150, TB<90      
+                                  L<385  LR<150  TB==S]'''
+    print head 
+    print dts
+         
+        
+

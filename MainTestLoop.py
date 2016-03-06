@@ -16,8 +16,10 @@ from EvaluateGame import evalGame, Part
 import warnings 
 print __doc__
 if  __name__ == '__main__':
-    global db     
+    global db ,fd    
     db = 0
+    dfile = 'digits.txt'
+    fd = open(dfile,'a')
     tfile = 'testFile.txt'          #   may need some manual edits
     c = [0,0,0] ; f = [0,0,0]
     correct = 0; failed = 0;
@@ -37,7 +39,7 @@ if  __name__ == '__main__':
 ##    now we know what to expect we shall see if we can find it
             h,w,ROI = Part(filen,db)
             
-            lx =evalGame(ROI,db)
+            lx =evalGame(ROI,db,fd)
             print 'evalGame returns ',lx
             print ' input     was   ',lsst
             if lx == lsst:
