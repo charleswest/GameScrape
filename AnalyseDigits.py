@@ -81,8 +81,10 @@ def findNumbers(cut):
     thresh = dilate(thresh,2)
     cvs(1, thresh,'threshold')
     img2 =  thresh.copy()               # maybe std size here
-    jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)  
-    return(img2,cnt,hier)
+    jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+      #and hier[0][i][3] == -1
+    rcnt = [ cn     for i,cn in enumerate(cnt) if hier[0][i][3] == -1 ]
+    return(img2,rcnt,hier)
 
 def xdebug(c1,c2):
     'display imput params to match shapes'
@@ -115,11 +117,11 @@ def evalGame(ROI,db):
     lx = []
     for i, f in enumerate (cnt):     #   for each possible n in the input                
         area = cv2.contourArea(f)
-        print ' blob {}  {}  area {} '.format(i,hier[0][i],area  )
+        
         cv2.drawContours(cxcopy,[f],0,(0,255,255),2)    # draw yellow
         x,y,w,h = cv2.boundingRect(f)
-        
-        if area > 250 and hier[0][i][3] == -1 :         #  no parent
+        print ' blob {}  {}  area {} x {}'.format(i,hier[0][i],area ,x )
+        if area > 250 :         #  no parent
             possible = img[y:y+h, x:x+w].copy()
             cvs(1,possible,'possible')
             key = cvs(1,cxcopy,'cxcopy')        #key is keypress from cvs
@@ -127,7 +129,7 @@ def evalGame(ROI,db):
   #          elif True: # key == ord('m') - 48 :
             n = -1; mdist = 999; rnl = []
 
-            lb,n,t4S,t6LR,t7TB = FndN(possible,0,1)
+            lb,n,t0,L,R,T,B,S,LR,TB,M3 = FndN(possible,0,1)
             print 'match returns {}  '.format(n )
             key = cvs(1,possible,'match')
             if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,img)
@@ -144,6 +146,7 @@ if  __name__ == '__main__':
     fil = "pics\sc_sample_terran_177_438_101_129.png"
     fil = "pics\sc_sample_terran_1452_835_95_148.png"
     #fil = "pics\sc_sample_terran_1087_267_67_94.png"
+    fil = "pics\sc2_sample_game_screen.png"
     #fil = 'input.png'
  
     h,w,ROI = Part(fil,db)
