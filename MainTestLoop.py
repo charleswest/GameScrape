@@ -54,7 +54,8 @@ if  __name__ == '__main__':
             p = 100.0 *c / (i+1)
             print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))
     fd.close()
-    printsort()
+    prb = printsort()
+    print 'problems are', prb
     cvd()
             
              

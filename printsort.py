@@ -22,9 +22,14 @@ def printsort():
     sx =   (  dts[:,1] , dts[:,0]  )
     srt  = dts   [  np.lexsort( sx      )    ]
     ix = 0
-    nx = 0
+    nx = 0; correct = 0; fkl = []; fkd = 0
     print head
     for row in srt:
+        if  row[0] == row[1]:
+            correct += 1
+        else:
+            fkd +=1
+            fkl.append((row[0],row[1]))
         if row[nx] == ix:
             print  row
         else:
@@ -36,5 +41,8 @@ def printsort():
                pass
             print row
     print head
+    print '{}  percent correct {} out of {}'.format(correct*100/len(srt),correct,len(srt))
+    return fkl
 if  __name__ == '__main__':
-    printsort()
+    prb = printsort()
+    print ' problems are', prb
