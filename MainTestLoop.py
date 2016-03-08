@@ -11,7 +11,6 @@ import time
 import numpy as np
 import cv2
 from cwUtils import cvd, cvs
-from findBlobs import findBlobs, boundsBlob, stdSize
 from EvaluateGame import evalGame, Part
 from printsort import printsort
 import warnings 
@@ -40,7 +39,7 @@ if  __name__ == '__main__':
 ##    now we know what to expect we shall see if we can find it
             h,w,ROI = Part(filen,db)
             
-            lx =evalGame(ROI,1,fd,lsst)
+            lx =evalGame(ROI,fd,lsst,db)
             lsst = map(int,lsst)
             print 'evalGame returns ',lx
             print ' input     was   ',lsst

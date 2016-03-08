@@ -10,10 +10,9 @@ inspected and moved to the blobs sub directory.
 import numpy as np
 import cv2
 from cwUtils import cvd, cvs, erode, dilate
-from findBlobs import findBlobs, boundsBlob, stdSize
-from DigitStat import identifyN ,parm
+from DigitStat import identifyN ,parm  
 import warnings
-global db
+ 
 
 def Part(  fx,db):
     ''' partition the image and return the ROI '''
@@ -27,13 +26,13 @@ def Part(  fx,db):
 
 def capture(f,j,mask):
     ''' input i contour and ROI and N.   The image of n is saved '''
-    global db
+    
     ''' write out the ith blob to a file'''
     x,y,w,h = cv2.boundingRect(f)
 #    blb =  mask[y-1:y+h+1, x-1:x+w+1].copy()     #   capture the thresholded img
     blb =  mask[y:y+h, x:x+w].copy()
     #    with a 1 pxl border
-   # x = cvs(1,blb,'blbx')
+   # x = cvs(db,blb,'blbx')
     cv2.imwrite('aMLblob{}.png'.format(j),blb)
     print 'number is ' , j
     for m in cv2.HuMoments(cv2.moments(blb)).flatten():
@@ -64,22 +63,23 @@ def cwload_digits_lst(fn):
  #   print 'training set labels', labels
     return(digits,labels)
 
-def findNumbers(cut):
+def findNumbers(cut,db):
     ''' take the ROI and look for posible numbers. Convert to gray, blur the region,
     erode and dilate the picture to improve resolution.  Now, find the contours and
     return the contours, our working image and the hierarchy of contours'''
+    
     cxcopy = cut.copy()
-    cvs(1,cxcopy,'cxcopy')
+    cvs(db,cxcopy,'cxcopy')
     ms = 100;   mx = 1500; erd = 0; tx = 127
     img2 = cut.copy()    #   copy to mark up for display
     gray = cv2.cvtColor(cut,cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray,(3,3),0)
-    #cvs(1,blur,'blur image')
+    #cvs(db,blur,'blur image')
 
     ret,thresh = cv2.threshold(blur,127,255,cv2.THRESH_BINARY) 
     thresh = erode(thresh,1)   
     thresh = dilate(thresh,2)
-    cvs(1, thresh,'threshold')
+    cvs(db, thresh,'threshold')
     img2 =  thresh.copy()               # maybe std size here
     jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
       #and hier[0][i][3] == -1
@@ -104,14 +104,14 @@ def  cmatch(f,cnt2,possible,im):
 ##    m2 = cv2.HuMoments(cv2.moments(c2)).flatten()
     
     return(99)
-def evalGame(ROI,db):
+def evalGame(ROI):
     h,w = ROI.shape[:2]
     cut = cv2.resize(ROI,(3*w,3*h))
     cut = erode(cut,1)
     cxcopy = cut.copy()
     ## load the saved digits list
     digits, labels =     cwload_digits_lst("blobs\\aML*.png" )
-    img,cnt,hier = findNumbers(cut)
+    img,cnt,hier = findNumbers(cut,db)
     print hier.shape, len(cnt)
     print 'next, prev, 1st c. , parent\n',hier
     lx = []
@@ -123,8 +123,8 @@ def evalGame(ROI,db):
         print ' blob {}  {}  area {} x {}'.format(i,hier[0][i],area ,x )
         if area > 250 :         #  no parent
             possible = img[y:y+h, x:x+w].copy()
-            cvs(1,possible,'possible')
-            key = cvs(1,cxcopy,'cxcopy')        #key is keypress from cvs
+            cvs(db,possible,'possible')
+            key = cvs(db,cxcopy,'cxcopy')        #key is keypress from cvs
             if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,img)     
   #          elif True: # key == ord('m') - 48 :
             n = -1; mdist = 999; rnl = []
@@ -132,7 +132,7 @@ def evalGame(ROI,db):
             parm.lst = identifyN(possible,0,1)
             n = parm.lst[1]
             print 'match returns {}  '.format(n )
-            key = cvs(1,possible,'match')
+            key = cvs(db,possible,'match')
             if key in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,key,img)
             elif key == ord('z') -48: xdebug(f,cnt2)
             else: lx.append((x,n))
@@ -143,7 +143,7 @@ def evalGame(ROI,db):
 if  __name__ == '__main__':
     print __doc__
     global db     
-    db = 0
+    db = 1
     fil = "pics\sc_sample_terran_177_438_101_129.png"
     fil = "pics\sc_sample_terran_1452_835_95_148.png"
     #fil = "pics\sc_sample_terran_1087_267_67_94.png"
@@ -152,7 +152,7 @@ if  __name__ == '__main__':
  
     h,w,ROI = Part(fil,db)
     #cvs(db,c1)
-    lx = evalGame(ROI,db)
+    lx = evalGame(ROI )
     print lx
                     
    
