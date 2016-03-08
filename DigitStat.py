@@ -58,27 +58,20 @@ def FndN(d,lb=0,db=0):
     ASTB = abs(S-TB)<6
     n = 99; pl = []
     # 80 96 54 2   7 3 1 
-    if (t0> 750   and M3>270 and TB < 40 and LR < 20
+    if (t0> 750   and M3>270 and TB < 17    
                                            ):   n = 8
-    elif (t0> 730   and abs(M3-166)<10 
-                                           ):   n = 0
-    elif  (abs(M3-280)<10 and TB >45
-                                           ):   n = 9 
-    elif  (abs(M3-280)<10 
-                                           ):   n = 6
-    elif  (abs(M3-215)<10 and LR < 30                # 5
-                                           ):   n = 5
-    elif  (abs(M3-215)<16 and L<300              # 5
-                                           ):   n = 4
-    elif  (abs(M3-240)<20                # 5
-                                           ):   n = 2
-    elif  (abs(M3-170)<20                # 5
-                                           ):   n = 3
-    elif   ( L>191              # 5
-                                           ):   n = 7
+    elif (t0> 730
+       and abs(M3-166)<10                  ):   n = 0
     
+    elif  (abs(M3-280)<10 and LR < 38      ):   n = 6
     
-    else:                                              n = 1
+    elif  (abs(M3-280)<10                  ):   n = 9
+    elif  (abs(M3-215)<10 and LR < 30      ):   n = 5
+    elif  (abs(M3-215)<16 and L<300        ):   n = 4
+    elif  (abs(M3-240)<20                  ):   n = 2
+    elif  (abs(M3-170)<20                  ):   n = 3
+    elif   ( L>191                         ):   n = 7
+    else:                                       n = 1
     lb = int(lb)
     return[lb,n,t0,L,R,T,B,S,LR,TB,M3 ]
 def prtTable(digits,labels):
@@ -86,9 +79,9 @@ def prtTable(digits,labels):
     dts = np.zeros((10,11),dtype='int32' )   
     for d , lb in zip(digits,labels):      
         lb,n,t0,L,R,T,B,S,LR,TB,M3 = FndN(d,lb,0)
-        dts[lb] = ([lb,  n,  t0 , L, R, T, B, M3,  LR, S,TB])
+        dts[lb] = ([lb,n,t0,L,R,T,B,S,LR,TB,M3])
         
-    head =   '''[  lb   n, t0, L,  R   T  B,  M3   LR,  S  TB   '''
+    head =   '''[  lb,  n,t0,  L,  R,  T  ,B  ,S,  LR, TB, M3  '''
     print head 
     print dts
 if  __name__ == '__main__':
