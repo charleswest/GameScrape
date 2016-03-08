@@ -23,6 +23,6 @@ Operation is as follows:
         thresholding the input to produce an accurate black and white mask
         different methods of comparing current possible digit with list of good digits
 
-        current best result are 7/10 input screens correct -- on the master branch
+        current best result are 9/10 input screens correct -- on the Haar branch
  
 
