@@ -4,7 +4,8 @@ import cv2
 from cwUtils import cvd, cvs, erode, dilate
 import itertools as it
 class parm():
-    head =   '''[  lb, n  t0,  L,  R,  T  ,B  ,S,  LR, TB, M3  '''
+    lstN = 12
+    head =   '''  lb, n  t0,  L,  R,  T  ,B  ,S,  LR, TB, M3 Mv3 '''
 def cwload_digits_lst(fn):
     ''' load a set of saved numbers into a list for comparison to possible numbers
         returned by find numbers '''
@@ -48,10 +49,15 @@ def FndN(d,lb=0,db=0):
     d[ :h/2, : ] = 0          # zero upper half
     B = np.sum(d)/255
 
-    d = im2.copy()         #  middle third
+    d = im2.copy()         #  middle horiz third
     d[   :h/3, : ] = 0        #    - upper 1/3
     d[ 2*h/3:, : ] = 0        #    - lower 1/3
     M3 = np.sum(d)/255
+
+    d = im2.copy()         #  middle vert third
+    d[   :w/3, : ] = 0        #    - upper 1/3
+    d[ 2*w/3:, : ] = 0        #    - lower 1/3
+    Mv3 = np.sum(d)/255
 
     # statistics
     S =  ( max(L,R,T,B) - min(L,R,T,B)) 
@@ -69,23 +75,22 @@ def FndN(d,lb=0,db=0):
     
     elif  (abs(M3-280)<10                  ):   n = 9
     elif  (abs(M3-215)<10 and LR < 30      ):   n = 5
-    elif  (abs(M3-215)<16 and L<300        ):   n = 4
+    elif  (abs(Mv3-310)<10                 ):   n = 4
+    
     elif  (abs(M3-240)<20                  ):   n = 2
     elif  (abs(M3-170)<20                  ):   n = 3
     elif   ( L>191                         ):   n = 7
     else:                                       n = 1
     lb = int(lb)
-    parm.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3 ]
+    parm.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3,Mv3 ]
     return parm.lst 
 def prtTable(digits,labels):
-
-    dts = np.zeros((10,11),dtype='int32' )   
+    
+    dts = np.zeros((10,parm.lstN),dtype='int32' )   
     for d , lb in zip(digits,labels):      
         parm.lst = FndN(d,lb,0)
         #print 'parm lst',parm.lst
         dts[lb] = parm.lst
-        
-    
     print parm.head 
     print dts
 if  __name__ == '__main__':

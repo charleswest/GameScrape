@@ -6,7 +6,7 @@ def printsort():
     lines = [line for line in f if line.strip()]
     
     f.close()
-    dts = np.zeros((len(lines),11),dtype='int32' )       # rows by columns
+    dts = np.zeros((len(lines),parm.lstN),dtype='int32' )       # rows by columns
     for i,xx in enumerate(lines):
         dts[i] = eval(xx)        
     head = parm.head
