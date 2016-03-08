@@ -3,6 +3,8 @@ import numpy as np
 import cv2
 from cwUtils import cvd, cvs, erode, dilate
 import itertools as it
+class parm():
+    head =   '''[  lb, n  t0,  L,  R,  T  ,B  ,S,  LR, TB, M3  '''
 def cwload_digits_lst(fn):
     ''' load a set of saved numbers into a list for comparison to possible numbers
         returned by find numbers '''
@@ -73,16 +75,18 @@ def FndN(d,lb=0,db=0):
     elif   ( L>191                         ):   n = 7
     else:                                       n = 1
     lb = int(lb)
-    return[lb,n,t0,L,R,T,B,S,LR,TB,M3 ]
+    parm.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3 ]
+    return parm.lst 
 def prtTable(digits,labels):
 
     dts = np.zeros((10,11),dtype='int32' )   
     for d , lb in zip(digits,labels):      
-        lb,n,t0,L,R,T,B,S,LR,TB,M3 = FndN(d,lb,0)
-        dts[lb] = ([lb,n,t0,L,R,T,B,S,LR,TB,M3])
+        parm.lst = FndN(d,lb,0)
+        #print 'parm lst',parm.lst
+        dts[lb] = parm.lst
         
-    head =   '''[  lb,  n,t0,  L,  R,  T  ,B  ,S,  LR, TB, M3  '''
-    print head 
+    
+    print parm.head 
     print dts
 if  __name__ == '__main__':
     print __doc__

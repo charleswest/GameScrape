@@ -15,7 +15,7 @@ from findBlobs import findBlobs, boundsBlob, stdSize
 from CaptureDigits import Part, capture
 from AnalyseDigits import  findNumbers
 from digits import *
-from DigitStat import FndN
+from DigitStat import FndN, parm
 from printsort import printsort
 import warnings 
 print __doc__
@@ -75,8 +75,9 @@ def evalGame(ROI,db,fd,rn):
                 lbx = -1
             else:
                 lbx = rn[j]
-            lb,n,t0,L,R,T,B,S,LR,TB,M3  = FndN(possible,lbx,1)
-            fd.write('{} {} {} {} {} {} {} {} {} {} {} \n'.format(lb,n,t0,L,R,T,B,S,LR,TB,M3  ))
+            parm.lst  = FndN(possible,lbx,1)
+            n = parm.lst[1]
+            fd.write('{} \n'.format(parm.lst ))
             cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
             lx.append((x,n))
             ly.append(n)                         # approximate order

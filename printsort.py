@@ -1,22 +1,15 @@
 import numpy as np
+from DigitStat import parm
 def printsort():
     f = open("digits.txt", "r")
     # omit empty lines and lines containing only whitespace
     lines = [line for line in f if line.strip()]
     
     f.close()
-    #lines.sort()
-    print 'lenghtlines', len(lines)  
-
-    dts = np.zeros((len(lines),12),dtype='int32' )       # rows by columns
+    dts = np.zeros((len(lines),11),dtype='int32' )       # rows by columns
     for i,xx in enumerate(lines):
-       # print xx
-        [ lb,n,t0,L,R,T,B,S,LR,TB,M3 ] = map(int, xx.split())
-       
-        dts[i] = ([lb,  n, t0,L,  R,  B,  T,  M3,  LR,  S,   TB, abs(S-TB)<5])
-        
-    head =   '''[ lb   n, t0, L,  R   B   T   M3  LR  S   TB  abs(S-TB)<5]      
-                                                          '''
+        dts[i] = eval(xx)        
+    head = parm.head
 
    # sx =   (  dts[:,12]  ,dts[:,11],  dts[:,10]           )
     sx =   (  dts[:,1] , dts[:,0]  )
