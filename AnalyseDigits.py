@@ -11,7 +11,7 @@ import numpy as np
 import cv2
 from cwUtils import cvd, cvs, erode, dilate
 from findBlobs import findBlobs, boundsBlob, stdSize
-from DigitStat import FndN ,parm
+from DigitStat import identifyN ,parm
 import warnings
 global db
 
@@ -129,7 +129,7 @@ def evalGame(ROI,db):
   #          elif True: # key == ord('m') - 48 :
             n = -1; mdist = 999; rnl = []
 
-            parm.lst = FndN(possible,0,1)
+            parm.lst = identifyN(possible,0,1)
             n = parm.lst[1]
             print 'match returns {}  '.format(n )
             key = cvs(1,possible,'match')

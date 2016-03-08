@@ -29,7 +29,7 @@ def cwload_digits_lst(fn):
 #   print 'training set labels', labels
     return(digits,labels)
 
-def FndN(d,lb=0,db=0):
+def identifyN(d,lb=0,db=0):
     h,w = d.shape
     im2 = d.copy()
     t0 = np.sum(im2) / 255
@@ -88,7 +88,7 @@ def prtTable(digits,labels):
     
     dts = np.zeros((10,parm.lstN),dtype='int32' )   
     for d , lb in zip(digits,labels):      
-        parm.lst = FndN(d,lb,0)
+        parm.lst = identifyN(d,lb,0)
         #print 'parm lst',parm.lst
         dts[lb] = parm.lst
     print parm.head 
