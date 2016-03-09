@@ -29,7 +29,7 @@ def evalGame(ROI,fd,rn,db):
     cxcopy = sROI.copy()    #   copy to mark up for display                                         # but we did it in CaptureDigits so .. .
     cmask,cnt,hier = findNumbers(sROI,db)    # incorporate hier check
 
-    print hier.shape, len(cnt)
+    if db: print hier.shape, len(cnt)
     Scon  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
     
     cvs(db,cxcopy,'cxcopy')
@@ -48,13 +48,14 @@ def evalGame(ROI,fd,rn,db):
                 lbx = -1
             else:
                 lbx = rn[j]
-            parm.lst  = identifyN(possible,lbx,1)
+            if db: print 'possible n {} w {} h {}'.format(lbx ,w,h)    
+            parm.lst  = identifyN(possible,lbx,db)
             n = parm.lst[1]
             fd.write('{} \n'.format(parm.lst ))
             cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
             lx.append((x,n))
             ly.append(n)                         # approximate order
-            #if db: print '>>>match evaluate {}   <<<'.format(ly)
+            if db: print '>>>match evaluate {}   <<<'.format(ly)
         cvs(db,cxcopy,'cxcopy')
     lx  =  sorted(lx,key = lambda (x,n):x )
     lx = [b for (a,b) in lx]
@@ -62,7 +63,7 @@ def evalGame(ROI,fd,rn,db):
 
 if  __name__ == '__main__':
     global db     
-    db = 0
+    db = 1
     fx0 = "pics\sc_sample_terran_177_438_101_129.png"
     fx1 = "pics\sc_sample_terran_1452_835_95_148.png"
     fx2 = 'pics\sc_sample_terran_302_1312_168_188.png'
@@ -74,7 +75,7 @@ if  __name__ == '__main__':
     rn4 = '10872676794'
     dfile = 'digits.txt'
     fd = open(dfile,'w')
-    for f,rn in zip( [fx4 ],[rn4 ]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
+    for f,rn in zip( [fx1 ],[rn1 ]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
         h,w,ROI = Part(f,db)
         listx = evalGame(ROI,fd,rn,db)    #  ::-1 is string reverse
         print 'eval game Harr   ',listx

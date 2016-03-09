@@ -19,8 +19,8 @@ def cwload_digits_lst(fn):
         fn = int((f[-5:-4]))
         lbl.append(fn)                    #get n label from filename       
         img = cv2.imread(f,0)
-        img = erode(img,1)
-        #print( 'im  shape {} {}'.format( fn ,img.shape)  )
+       # img = erode(img,1)
+        print( 'im  shape {} {}'.format( fn ,img.shape)  )
         #img = np.floaT2(cv2.resize(img,(40,35) ))
         dl.append(img)
     digits = dl    #np.array(dl)
@@ -29,7 +29,8 @@ def cwload_digits_lst(fn):
 #   print 'training set labels', labels
     return(digits,labels)
 
-def identifyN(d,lb=0,db=0):
+def identifyN(p,lb=0,db=0):
+    d = p.copy()
     h,w = d.shape
     im2 = d.copy()
     t0 = np.sum(im2) / 255

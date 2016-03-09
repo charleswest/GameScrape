@@ -79,7 +79,7 @@ def findNumbers(cut,db):
     ret,thresh = cv2.threshold(blur,127,255,cv2.THRESH_BINARY) 
     thresh = erode(thresh,1)   
     thresh = dilate(thresh,2)
-    cvs(db, thresh,'threshold')
+    if db: cvs(db, thresh,'threshold')
     img2 =  thresh.copy()               # maybe std size here
     jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
       #and hier[0][i][3] == -1
