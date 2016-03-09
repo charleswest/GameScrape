@@ -6,26 +6,23 @@ global db
 def cvd():
     #global db
     cv2.destroyAllWindows()
-def cvs(db, img,d=['cvs'],t=0 ):
+def cvs(db, img,d=['cvs'],s=1 ):
     ''' Display cv2 format image.  Quit program
     if q is input otherwise continue after t msec
     '''
     
     h,w = img.shape[:2]   #   h = rows,  w = cols
     #print'h x w', h, w
-    if max(h,w) > 1400:
-        imgC = cv2.resize(img, (w/2,h/2))     #   note h w on resize
-    else:
-        imgC = np.zeros((h,w))
-        imgC = img.copy()
+    
+    imgC = cv2.resize(img, (s*w,h*s)) 
+        
     ds = ''
     for s in d:
         ds = ds + str(s)+ ' '      #  cat list into single string for imshow 
     cv2.imshow(ds , imgC)
     #print 'width x height', w, h
     if db:
-        #print 'cvs db t', db  , t
-        wt = t
+        wt = 0
     else:
         wt = 1
     key = cv2.waitKey(wt)
@@ -101,16 +98,16 @@ def order_pts(pts):
 if  __name__ == '__main__':
     global db
     db = True
-    fil = "cropTest.png"
-    img = cv2.imread(fil)
-    cvs(db,img,'continued 1/2 sec',5000)
-    imgE = erode(img,3)
-    imgD = dilate(imgE,3)
-    cvs(db,imgE, ' eroded' ,0)
-    cvs(db,imgD, 'dilated', 0)
     fil = "input.png"
     img = cv2.imread(fil)
-    cvs(db,img,['input.png ', 27, 'list test'],2000)
+    cvs(db,img,'double size',2)
+    imgE = erode(img,3)
+    imgD = dilate(imgE,3)
+    cvs(db,imgE, ' eroded'  )
+    cvs(db,imgD, 'dilated' )
+    fil = "input.png"
+    img = cv2.imread(fil)
+    cvs(db,img,['input.png ', 27, 'list test'],3)
     im2 = rotate(img,90)
     cvs(db,im2)
     ######################  test order pts
