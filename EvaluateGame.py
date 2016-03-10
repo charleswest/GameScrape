@@ -25,7 +25,7 @@ def evalGame(ROI,fd,rn,db):
     
     h,w = ROI.shape[:2]
  #   sROI =   cv2.resize(ROI,(3*w,3*h))        #    this may not be a good idea    
-    sROI = erode(ROI,1)
+  
     cxcopy = ROI.copy()    #   copy to mark up for display                                         # but we did it in CaptureDigits so .. .
     cmask,cnt,hier = findNumbers(ROI,db)    # incorporate hier check
     if db: print hier.shape, len(cnt)
@@ -37,9 +37,9 @@ def evalGame(ROI,fd,rn,db):
     for i, f in enumerate (Scon):                  
         area = cv2.contourArea(f)
         x,y,w,h = cv2.boundingRect(f)
-        cv2.drawContours(cxcopy,[f],0,(0,0,255),1)
+        cv2.drawContours(cxcopy,[f],0,(0,0,255),2)
         if db: print ' x {} contour  area {}'.format(x,area)
-        if (area >19  ):
+        if (area >19 and h >10  ):
 ##            and  x <> 120
 ##            and x <>258
 ##            and  x <> 149                  ):       #  some bad blobs here  /   
@@ -54,7 +54,7 @@ def evalGame(ROI,fd,rn,db):
             parm.lst  = identifyN(possible,lbx,db)
             n = parm.lst[1]
             
-            cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
+            cv2.drawContours(cxcopy,[f],0,(0,255,0),2)    # draw after capture
             if n <> -1:
                 lx.append((x,n))
                 ly.append(n)                         # approximate order

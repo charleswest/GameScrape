@@ -96,17 +96,20 @@ def identifyN(p,lb=0,db=0):
     #  identify the input
     if   (t0 > 75  and mm ==    [1, 1, 1, 1, 2, 2]): n = 0
     elif mm ==  [1, 1, 1, 1, 2, 1]: n = 1
-    elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1        # hack for bad threshold 
+    elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1        # hack for bad threshold
+    elif mm ==  [1, 1, 1, 1, 1, 1] and h == 11 : n = 1 
     elif mm ==  [2, 2, 1, 1, 2, 3]: n = 2
     elif mm ==  [1, 2, 1, 1, 1, 3] :n = 2       #   noisy 2
     elif mm ==  [3, 1, 1, 1, 1, 3]: n = 3
     elif mm ==  [3, 1, 1, 1, 2, 3]: n = 3       #  noisy 3 
-    elif mm ==  [1, 1, 1, 1, 2, 2] : n = 4
+    elif mm ==  [1, 1, 1, 1, 2, 2]: n = 4
+    elif mm ==  [1, 1, 1, 1, 1, 2]: n = 4       # noisy 4
     elif mm ==  [2, 2, 1, 2, 1, 3]: n = 5
     elif mm ==  [1, 2, 1, 2, 1, 3]: n = 6
     elif mm ==  [2, 1, 1, 1, 1, 2]: n = 7
     elif mm ==  [1, 1, 2, 2, 1, 3]: n = 8
     elif mm ==  [2, 1, 1, 1, 1, 3]: n = 9
+    elif mm ==  [1, 1, 1, 2, 1, 3]: n = 9            # noisy 9
     else :n = -1
     
     lb = int(lb)
