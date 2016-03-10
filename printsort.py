@@ -9,7 +9,7 @@ def printsort():
     dts = np.zeros((len(lines),parm.lstN),dtype='int32' )       # rows by columns
     for i,xx in enumerate(lines):
         dts[i] = eval(xx)        
-    head = parm.head
+    head = parm.ahd
 
    # sx =   (  dts[:,12]  ,dts[:,11],  dts[:,10]           )
     sx =   (  dts[:,1] , dts[:,0]  )

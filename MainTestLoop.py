@@ -17,7 +17,7 @@ import warnings
 print __doc__
 if  __name__ == '__main__':
     global db ,fd    
-    db = 0
+    db = 1
     dfile = 'digits.txt'
     fd = open(dfile,'w')
     tfile = 'testFile.txt'          #   may need some manual edits

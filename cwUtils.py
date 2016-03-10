@@ -17,8 +17,8 @@ def cvs(db, img,d=['cvs'],s=1 ):
     imgC = cv2.resize(img, (s*w,h*s)) 
         
     ds = ''
-    for s in d:
-        ds = ds + str(s)+ ' '      #  cat list into single string for imshow 
+    for sx in d:
+        ds = ds + str(sx)+ ' '      #  cat list into single string for imshow 
     cv2.imshow(ds , imgC)
     #print 'width x height', w, h
     if db:

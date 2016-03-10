@@ -5,7 +5,9 @@ from cwUtils import cvd, cvs, erode, dilate
 import itertools as it
 class parm():
     lstN = 12
-    head =   '''  lb, n  t0,  L,  R,  T  ,B  ,S,  LR, TB, M3 Mv3 '''
+    head =   '''  lb, n  t0,  L,  R,  T  ,B  S   LR  TB, M3 Mv3 '''
+    ahd  =   '''  lb n t0  L R  T  B  S  LR TB M3 Mv3 '''
+
 def cwload_digits_lst(fn):
     ''' load a set of saved numbers into a list for comparison to possible numbers
         returned by find numbers '''
@@ -28,76 +30,107 @@ def cwload_digits_lst(fn):
 #   cv2.imshow('training set', mosaic(10, digits[:]))
 #   print 'training set labels', labels
     return(digits,labels)
-
 def identifyN(p,lb=0,db=0):
+    msk = [] 
+    def pxCount(d,lb = 0,s=0 ):
+        global msk
+        jk,cnt4d, hier  = cv2.findContours(d,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        m = len(cnt4d)
+##        if m > 0:
+##            for cn in cnt4d:
+##                print cv2.contourArea(cn)
+        if s == 1:           
+            msk = []           
+        msk.append(m)
+        return msk
+    d = np.zeros_like(p)
     d = p.copy()
     h,w = d.shape
     im2 = d.copy()
     t0 = np.sum(im2) / 255
+    cvs(db,d,'digit  ',5)
 
     d[:, w/2:] = 0        # same as bitwise and
     L = np.sum(d)/255
-
+    cvs(db,d,'digit  ',5)
+    pxCount(d,lb,1)
+    
     d = im2.copy()
     d[:, :w/2] = 0
     R = np.sum(d)/255
+    cvs(db,d,'digit  ',5)
+    pxCount(d)
 
     d = im2.copy()         #  upper half
     d[ h/2:, : ] = 0
     T = np.sum(d)/255
+    cvs(db,d,'digit  ',5)
+    pxCount(d)
 
     d = im2.copy()         #  lower half
     d[ :h/2, : ] = 0          # zero upper half
     B = np.sum(d)/255
-
+    cvs(db,d,'digit  ',5)
+    pxCount(d)
+    
     d = im2.copy()         #  middle horiz third
     d[   :h/3, : ] = 0        #    - upper 1/3
     d[ 2*h/3:, : ] = 0        #    - lower 1/3
     M3 = np.sum(d)/255
+    cvs(db,d,'digit h Mid 1/3',5)
+    pxCount(d )
+    
 
     d = im2.copy()         #  middle vert third
-    d[   :w/3, : ] = 0        #    - upper 1/3
-    d[ 2*w/3:, : ] = 0        #    - lower 1/3
+    d[ :,  :w/3  ] = 0        #    - left 1/3
+    d[ :, 2*w/3:  ] = 0        #    - right 1/3
     Mv3 = np.sum(d)/255
-
+    cvs(db,d,'digit  v Mid3',5)
+    mm = pxCount(d ,lb,2)
+    if db: print 'final mask for {} {}'.format(lb,mm)
+    
     # statistics
     S =  ( max(L,R,T,B) - min(L,R,T,B)) 
     LR =  abs(L-R) 
     TB =  abs(T-B)
-    ASTB = abs(S-TB)<6
-    n = 99; pl = []
-    # 80 96 54 2   7 3 1 
-    if (t0> 750   and M3>270 and TB < 17    
-                                           ):   n = 8
-    elif (t0> 730
-       and abs(M3-166)<10                  ):   n = 0
+    #  identify the input
+    if   (t0 > 75  and mm ==    [1, 1, 1, 1, 2, 2]): n = 0
+    elif mm ==  [1, 1, 1, 1, 2, 1]: n = 1
+    elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1        # hack for bad threshold 
+    elif mm ==  [2, 2, 1, 1, 2, 3]: n = 2
+    elif mm ==  [1, 2, 1, 1, 1, 3] :n = 2       #   noisy 2
+    elif mm ==  [3, 1, 1, 1, 1, 3]: n = 3
+    elif mm ==  [3, 1, 1, 1, 2, 3]: n = 3       #  noisy 3 
+    elif mm ==  [1, 1, 1, 1, 2, 2] : n = 4
+    elif mm ==  [2, 2, 1, 2, 1, 3]: n = 5
+    elif mm ==  [1, 2, 1, 2, 1, 3]: n = 6
+    elif mm ==  [2, 1, 1, 1, 1, 2]: n = 7
+    elif mm ==  [1, 1, 2, 2, 1, 3]: n = 8
+    elif mm ==  [2, 1, 1, 1, 1, 3]: n = 9
+    else :n = -1
     
-    elif  (abs(M3-280)<10 and LR < 38      ):   n = 6
-    
-    elif  (abs(M3-280)<10                  ):   n = 9
-    elif  (abs(M3-215)<10 and LR < 30      ):   n = 5
-    elif  (abs(Mv3-310)<10                 ):   n = 4
-    
-    elif  (abs(M3-240)<20                  ):   n = 2
-    elif  (abs(M3-170)<20                  ):   n = 3
-    elif   ( L>191                         ):   n = 7
-    else:                                       n = 1
     lb = int(lb)
     parm.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3,Mv3 ]
+    d = d - d
     return parm.lst 
 def prtTable(digits,labels):
-    
+    db = 1
     dts = np.zeros((10,parm.lstN),dtype='int32' )   
-    for d , lb in zip(digits,labels):      
-        parm.lst = identifyN(d,lb,0)
-        #print 'parm lst',parm.lst
-        dts[lb] = parm.lst
-    print parm.head 
+    for d , lb in zip(digits,labels):
+        #print '     ',parm.head 
+##        if lb in range(10):
+         parm.lst = identifyN(d,lb,db)
+##            print '     ',parm.head  
+##            print 'parm   ',parm.lst,'\n'
+##            cvs(1,d,'digit',4)
+         dts[lb] = parm.lst
+            
     print dts
 if  __name__ == '__main__':
     print __doc__
     digits, labels =     cwload_digits_lst("blobs\\aML*.png" )
     prtTable(digits,labels)
+    cvd()
 
          
         
