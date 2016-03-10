@@ -94,7 +94,9 @@ def identifyN(p,lb=0,db=0):
     LR =  abs(L-R) 
     TB =  abs(T-B)
     #  identify the input
-    if   (t0 > 75  and mm ==    [1, 1, 1, 1, 2, 2]): n = 0
+    if   (t0 > 75
+               # L  R  T  B  h  v        #  left right top bottom horiz vertical
+    and mm ==   [1, 1, 1, 1, 2, 2]): n = 0
     elif mm ==  [1, 1, 1, 1, 2, 1]: n = 1
     elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1        # hack for bad threshold
     elif mm ==  [1, 1, 1, 1, 1, 1] and h == 11 : n = 1 
