@@ -1,0 +1,69 @@
+Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 20:32:19) [MSC v.1500 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+>>> 
+======== RESTART: C:\Users\charles\Documents\GitHub\GameScrape\MainTestLoop.py ========
+
+This program loads each image in the   directory
+and looks for numbers on the screen.
+ 
+enter q leave early
+'
+
+This program loads each image in the   directory
+and reads the manifest to provide a score for the
+evaluation
+ 
+enter q to leave early
+
+file>>>>>>>> pics\sc2_sample_game_screen.png  
+red checked 345
+evalGame returns  [3, 6, 0, 1, 7, 2, 3]
+ input     was    [3, 6, 0, 1, 7, 2, 3]
+**** 1 correct out of 1   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_1087_267_67_94.png  
+red checked 351
+evalGame returns  [1, 0, 8, 7, 2, 6, 7, 6, 7, 9, 4]
+ input     was    [1, 0, 8, 7, 2, 6, 7, 6, 7, 9, 4]
+**** 2 correct out of 2   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_114_112_22_38.png  
+red checked 346
+evalGame returns  [1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+ input     was    [1, 1, 4, 1, 1, 2, 2, 2, 3, 8]
+**** 3 correct out of 3   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_1452_835_95_148.png  
+red checked 361
+evalGame returns  [1, 4, 5, 2, 8, 3, 5, 9, 5, 1, 4, 8]
+ input     was    [1, 4, 5, 2, 8, 3, 5, 9, 5, 1, 4, 8]
+**** 4 correct out of 4   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_1475_3612_200_200.png  
+red checked 375
+evalGame returns  [1, 4, 7, 5, 3, 6, 1, 2, 2, 0, 0, 2, 0, 0]
+ input     was    [1, 4, 7, 5, 3, 6, 1, 2, 2, 0, 0, 2, 0, 0]
+**** 5 correct out of 5   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_177_438_101_129.png  
+red checked 375
+evalGame returns  [1, 7, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+ input     was    [1, 7, 7, 4, 3, 8, 1, 0, 1, 1, 2, 9]
+**** 6 correct out of 6   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_302_1312_168_188.png  
+red checked 375
+evalGame returns  [3, 0, 2, 1, 3, 1, 2, 1, 6, 8, 1, 8, 8]
+ input     was    [3, 0, 2, 1, 3, 1, 2, 1, 6, 8, 1, 8, 8]
+**** 7 correct out of 7   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_324_260_42_54.png  
+red checked 351
+evalGame returns  [3, 2, 4, 2, 6, 0, 4, 2, 5, 4]
+ input     was    [3, 2, 4, 2, 6, 0, 4, 2, 5, 4]
+**** 8 correct out of 8   100.0 pct
+file>>>>>>>> pics\sc_sample_terran_69_148_27_38.png  
+red checked 346
+evalGame returns  [6, 9, 1, 4, 8, 2, 7, 3, 8]
+ input     was    [6, 9, 1, 4, 8, 2, 7, 3, 8]
+**** 9 correct out of 9   100.0 pct
+file>>>>>>>> pics\sc_sample_zerg_99_20_19_18_red.png  
+red checked 268
+red numbers exit
+evalGame returns  [9, 9, 2, 0, 1, 9, 1, 8]
+ input     was    [9, 9, 2, 0, 1, 9, 1, 8]
+**** 10 correct out of 10   100.0 pct
+>>> 
