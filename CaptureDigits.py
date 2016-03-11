@@ -41,30 +41,19 @@ def findNumbers(cut,db):
     print 'red checked', x
     if x < 280 :
         
-        gray = cv2.cvtColor(cut,cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray,(3,3),0)
-        ret,thresh = cv2.threshold(blur,40,255,cv2.THRESH_BINARY) 
-        #thresh = erode(thresh,1)   
-        #thresh = dilate(thresh,1)
-        if db: cvs(db, thresh,' red threshold',3)
-        img2 =  thresh.copy()               # maybe std size here
-        jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-        for cn in cnt:
-            
-            x,y,w,h = cv2.boundingRect(cn)
-            #print 'new contour', x
-            if (x >280):
-                cv2.drawContours(cut,[cn],0,(255,255,255),1)
-                cvs(db,cut,'red improvment',3)
-
-        #print 'end redcheck'
-        cvs(db,cut,'red improvment',3)
+        # try again with low tx value
+        ret,thresh2 = cv2.threshold(blur,40,255,cv2.THRESH_BINARY)
+        # now splice the two thresholds
+        left = img2[:,0:280] ; right = thresh2[:,280:]
+        combo = np.hstack((left,right))
         
-        return findNumbers(cut,db)
-    else:
-        #print 'find numbers exit'
+        if db: cvs(db, combo,' red threshold',3)
+        img2 =  combo.copy()
+        jnk,cnt, hier= cv2.findContours(combo,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+       
+        print 'red numbers exit'
         
-        return(img2,cnt,hier)
+    return(img2,cnt,hier)
                     
 
 
