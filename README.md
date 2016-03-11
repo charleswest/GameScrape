@@ -15,6 +15,14 @@ Operation is as follows:
     returns a list of the numbers it finds.
 
 4.  MainTestLoop runs EvaluateGame on every game to compare it's output to what we already have on
-    testfile.txt.  MainTest keep a running total of correct results. 
+    testfile.txt.  MainTest keep a running total of correct results.
+
+5.  AnalyseDigits runs a combination of CaptureDigits and EvaluateGame to allow faster
+    experiment with:
+        partitioning the input to accurately capture a digit
+        thresholding the input to produce an accurate black and white mask
+        different methods of comparing current possible digit with list of good digits
+
+        current best result are 9/10 input screens correct -- on the Haar branch
  
 

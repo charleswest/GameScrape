@@ -9,107 +9,101 @@ import glob
 import time
 import numpy as np
 import cv2
-from cwUtils import cvd, cvs
-from findBlobs import findBlobs, boundsBlob, stdSize
-from CaptureDigits import Part, capture
+from cwUtils import cvd, cvs,erode, dilate
+from CaptureDigits import Part, capture, findNumbers
+
+from DigitStat import identifyN, parm
+from printsort import printsort
 import warnings 
 print __doc__
-def closeUp(cnt,db):
-    ''' display a closeup view of a contour.'''
-    img = np.zeros((120,960,3), np.uint8)          # empty black window   
-    cv2.drawContours(img,[cnt],0,(255,255,255),1)
-    imgx =    img.copy()
-    cvs(db,imgx,'close up')
-    
 
-def evaluate( cnt1,db):
-    ''' match the incomming contour against the set of digits we have stored in
-        blobs.  '''
- #   global db
-    closeUp(cnt1,db)
-    path = ("blobs\\*.png" )                
-    files = glob.glob(path)
-    rn = [] 
-    for xn,f in enumerate(files):                
-        n   = int(f[-5:-4])                    #get n from filename       
-        img = cv2.imread(f,0)                  # read a digit 
-        h,w = img.shape[:2]       
-        ret, contours,hierarchy = cv2.findContours(img,2,1)
-        cnt2 = contours[0]
-
-        dist = cv2.matchShapes(cnt1,cnt2,1,0.0)
-        area = cv2.contourArea(cnt1)
-        if db: print 'dist from number {} is {} area is {}'.format( n, round(dist,5),area)
-        rn.append( (dist,n) )     #  list of result from matchShapes 
-        
-    #  pick the one with the lowest score
-    (dist,n) = min(rn, key = lambda (dist,n): dist )         #   minimum distence  
-    if db: print 'rn is ',round(dist,5), n, 'area' ,area
-    #  if the best one was close enough filter further based on number and area
-    #  
-    if (  dist >  .35          #.1:
-    or    n == 4 and (area < 200 or area > 310)
-    or    n == 8 and (area < 400 )      
-    or    n == 0 and  area < 400  ):
-        return(False,0)
-
-    else:
-        return(True,n)
-
-def evalGame(ROI,db):
+def evalGame(ROI,fd,rn,db):
     ''' we obtain the ROI region of interest  from Part or as input from the
         last screen processed by Maintest.   We look for blob in the ROI and
-        evaluate them by matching to our recorded set of captured digits.
+        evaluate them by matching to specific areas in the img.
     '''
- #   global db
+    
     h,w = ROI.shape[:2]
-    sROI =     cv2.resize(ROI,(2*w,2*h))        #    this may not be a good idea
-                                             # but we did it in CaptureDigits so .. .
-    ms = 100;   mx = 550; erd = 0; tx = 127
-    # ms minimum size
-    # erd erosion dilation -- leave this at zero
-    # tx the threshold for the binary mask 
-    (cnt,cmask) =  findBlobs(sROI,ms,mx,erd,0,tx) # will modify img to show cnt
-    img2 = sROI.copy()    #   copy to mark up for display
-    Scnt  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
-    # sort left to right
-    if db: print ' input is ms {} mx {} tval {}  count {} '\
-          .format(ms,mx,tx, len(cnt))
-    x,y,w,h = boundsBlob(cnt)    #    outer bounds of blob area
-    if db: print (x,y,w,h)
-    tl = (x-10,y-10) ; br = ( x  +  w+10, y+ h+10)       #  10 for more room
-    cv2.rectangle(img2,(tl),(br),(255,255,255),1)         # white rectangle
-    #cvs( db, img2, ' sROI')
-    lx = []
-    for i, f in enumerate (Scnt):       # scan left to right sorted contours             
-       
-        if db: print ' blob {}'.format(i)
-        # compare blob to our file of template blobs
-        #tmpeval(f,db)                      #  explore alternate evaluation
-        ret,n = evaluate(f,db)
-        if ret:          
-            cv2.drawContours(img2,[f],0,(0,255,0),1)    # draw after capture
-            cmask = cmask -cmask
-            cv2.drawContours(cmask,[f],0,(255,255,255),1)
-            lx.append(n)
-            if db: print '>>>evaluate {}   <<<'.format(lx)
-            #cvs(0,cmask,'cmask')
-            x= cvs(db,img2,'evaluate')
-            if x in [1,2,3,4,5,6,7,8,9,0 ] : capture(f,x)  
+ #   sROI =   cv2.resize(ROI,(3*w,3*h))        #    this may not be a good idea    
+    sROI = erode(ROI,1)
+    cxcopy = ROI.copy()    #   copy to mark up for display                                         # but we did it in CaptureDigits so .. .
+    cmask,cnt,hier = findNumbers(ROI,db)    # incorporate hier check
+    if db: print hier.shape, len(cnt)
+    Scon  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
+    
+    cvs(db,cxcopy,'cxcopy',3)
+    lx = [] ; ly = [] ; j = -1
+    
+    for i, f in enumerate (Scon):                  
+        area = cv2.contourArea(f)
+        x,y,w,h = cv2.boundingRect(f)
+        cv2.drawContours(cxcopy,[f],0,(0,0,255),1)
+        if db: print ' x {} contour  area {}'.format(x,area)
+        if (area >19  ):
+##            and  x <> 120
+##            and x <>258
+##            and  x <> 149                  ):       #  some bad blobs here  /   
+            j = j + 1
+            possible = cmask[y:y+h, x:x+w].copy()
+            if j == len(rn):
+                j = 1
+                lbx = -1
+            else:
+                lbx = rn[j]
+            if db: print ' x {} possible n {} w {} h {}'.format(x,lbx ,w,h)    
+            parm.lst  = identifyN(possible,lbx,db)
+            n = parm.lst[1]
             
-    return lx                   # list of numbers in the panel
+            cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
+            if n <> -1:
+                lx.append((x,n))
+                ly.append(n)                         # approximate order
+                fd.write('{} \n'.format(parm.lst ))
+            if db: print '>>>match evaluate {}   <<<'.format(ly)
+        cvs(db,cxcopy,'cxcopy',3)
+    lx  =  sorted(lx,key = lambda (x,n):x )
+    lx = [b for (a,b) in lx]
+    return  lx                 # list of numbers in the panel
 
 if  __name__ == '__main__':
     global db     
     db = 1
-##    fx = 'pics\sc_sample_terran_302_1312_168_188.png'
-##    h,w,ROI = Part(fx,db)
-##    cv2.imwrite('input.png',ROI)
-    #  ROI   region of interest
-    ROI = cv2.imread('input.png')    #   uses the last image from mainloop
-    cvs(db, ROI, 'input')
-    listx = evalGame(ROI,db)
-    print 'eval game returns',listx    
+   
+    fx1 = "pics\sc_sample_terran_1452_835_95_148.png"
+    fx2 = 'pics\sc_sample_terran_302_1312_168_188.png'
+    fx3 = "pics\sc_sample_terran_177_438_101_129.png"
+    fx4 = "pics\sc_sample_terran_1087_267_67_94.png"
+    fx5 = "pics\sc_sample_zerg_99_20_19_18_red.png"
+    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
+    fx7 = 'pics\sc_sample_terran_1475_3612_200_200.png'
+    fx8 = 'pics\sc_sample_terran_69_148_27_38.png'
+    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
+    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
+    txt = 'ROI.png'
+    
+    rn1 = '145283595148'
+    rn2 = '3021312168188'
+    rn3 = '177438101129'
+    rn4 = '10872676794'
+    rn5 = '99201918'
+    rn6 = '3242604254'
+    rn7 = '14753612200200'
+    rn8 = '691482738'
+    dfile = 'digits.txt'
+    fd = open(dfile,'w')
+     
+    
+    for f,rn in zip( [fx8 ],[rn8 ]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
+        h,w,ROI = Part(f,db)
+        cvs(db,ROI,'roi',3)
+        listx = evalGame(ROI,fd,rn,db)    #  ::-1 is string reverse
+        print 'eval game Harr   ',listx
+        print ' rn value was    ',map(int,list(rn))
+        #print 'eval game MatchShape',listy
+        print f
+        
+    fd.close()
+    printsort()
     cvd()
 
     
