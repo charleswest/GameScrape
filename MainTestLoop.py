@@ -17,10 +17,10 @@ import warnings
 print __doc__
 if  __name__ == '__main__':
     global db ,fd    
-    db = 1
+    db = 0
     dfile = 'digits.txt'
     fd = open(dfile,'w')
-    tfile = 'testFile.txt'          #   may need some manual edits
+    tfile = 'testFile.txt'           
     c = [0,0,0] ; f = [0,0,0]
     correct = 0; failed = 0;
     with open(tfile,'r' ) as fr:

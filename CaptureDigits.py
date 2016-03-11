@@ -17,7 +17,7 @@ def findNumbers(cut,db):
     
     cxcopy = cut.copy()
     cvs(db,cxcopy,'cxcopy',3)
-    print 'cxcopy.shape', cxcopy.shape
+    if db: print 'cxcopy.shape', cxcopy.shape
     ms = 100;   mx = 1500; erd = 0; tx = 127
     img2 = cut.copy()    #   copy to mark up for display
     gray = cv2.cvtColor(cut,cv2.COLOR_BGR2GRAY)
@@ -31,35 +31,39 @@ def findNumbers(cut,db):
     img2 =  thresh.copy()               # maybe std size here
     jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
       #and hier[0][i][3] == -1
-    print '{} contours found'.format(len(cnt))
+    if db: print '{} contours found'.format(len(cnt))
     cnt = [ cn     for i,cn in enumerate(cnt) if hier[0][i][3] == -1 ]
 
     
-    ''' if right most cnt is < 850 re threshold on 80 and splice masks'''    
+    ''' if right most cnt is < 280 re threshold on 40 and splice masks'''    
     scon  =   max(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmax()][0]))
     x,y,w,h = cv2.boundingRect(scon[-1])
-    if  0:  #x < 850 :
-        print 'red checked', x
+    print 'red checked', x
+    if x < 280 :
+        
         gray = cv2.cvtColor(cut,cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(gray,(3,3),0)
         ret,thresh = cv2.threshold(blur,40,255,cv2.THRESH_BINARY) 
         #thresh = erode(thresh,1)   
-       # thresh = dilate(thresh,2)
-        if db: cvs(db, thresh,' red threshold')
+        #thresh = dilate(thresh,1)
+        if db: cvs(db, thresh,' red threshold',3)
         img2 =  thresh.copy()               # maybe std size here
         jnk,cnt, hier= cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
         for cn in cnt:
+            
             x,y,w,h = cv2.boundingRect(cn)
-            if (x > 825
-            and x <> 941):
-                cv2.drawContours(cut,[cn],0,(255,255,255),3)
-                cvs(1,cut,'red improvment')
+            #print 'new contour', x
+            if (x >280):
+                cv2.drawContours(cut,[cn],0,(255,255,255),1)
+                cvs(db,cut,'red improvment',3)
 
-        print 'end redcheck'
-        cvs(1,cut,'red improvment')
-        return (findNumbers(cut,db))
+        #print 'end redcheck'
+        cvs(db,cut,'red improvment',3)
+        
+        return findNumbers(cut,db)
     else:
-        print 'find numbers exit'
+        #print 'find numbers exit'
+        
         return(img2,cnt,hier)
                     
 
@@ -112,14 +116,14 @@ if  __name__ == '__main__':
     db = 1
     fil = "pics\sc_sample_terran_177_438_101_129.png"
     fil = "pics\sc_sample_terran_69_148_27_38.png"
-    #fil = "pics\sc_sample_zerg_99_20_19_18_red.png"
+    fil = "pics\sc_sample_zerg_99_20_19_18_red.png"
     #fil = 'input.png'
     h,w,sROI = Part(fil,db)
     h,w = sROI.shape[:2]
  #   sROI =   cv2.resize(ROI,(3*w,3*h))        #    this may not be a good idea    
  #   sROI = erode(sROI,1)
     cxcopy = sROI.copy()    #   copy to mark up for display                                         # but we did it in CaptureDigits so .. .
-    cmask,cnt,hier = findNumbers(sROI,db)    # in
+    cmask,cnt,hier = findNumbers(sROI,db)    # ,in
     Scon  =   sorted(cnt, key = lambda cnt: tuple(cnt[cnt[:,:,0].argmin()][0]))
 
     for i, f in enumerate (Scon):

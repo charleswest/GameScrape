@@ -37,24 +37,22 @@ def evalGame(ROI,fd,rn,db):
     for i, f in enumerate (Scon):                  
         area = cv2.contourArea(f)
         x,y,w,h = cv2.boundingRect(f)
-        cv2.drawContours(cxcopy,[f],0,(0,0,255),2)
+        cv2.drawContours(cxcopy,[f],0,(255,255,255),1)
         if db: print ' x {} contour  area {}'.format(x,area)
-        if (area >19 and h >10  ):
-##            and  x <> 120
-##            and x <>258
-##            and  x <> 149                  ):       #  some bad blobs here  /   
+        if (area > 18 and h >10
+        or  area > 15 and w <9 
+            ):        #   18  ok except red panel needs 16
             j = j + 1
             possible = cmask[y:y+h, x:x+w].copy()
             if j == len(rn):
-                j = 1
-                lbx = -1
+                j = 1;  lbx = -1      
             else:
                 lbx = rn[j]
             if db: print ' x {} possible n {} w {} h {}'.format(x,lbx ,w,h)    
             parm.lst  = identifyN(possible,lbx,db)
             n = parm.lst[1]
             
-            cv2.drawContours(cxcopy,[f],0,(0,255,0),2)    # draw after capture
+            cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
             if n <> -1:
                 lx.append((x,n))
                 ly.append(n)                         # approximate order
@@ -93,7 +91,7 @@ if  __name__ == '__main__':
     fd = open(dfile,'w')
      
     
-    for f,rn in zip( [fx8 ],[rn8 ]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
+    for f,rn in zip( [fx5 ],[rn5 ]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
         h,w,ROI = Part(f,db)
         cvs(db,ROI,'roi',3)
         listx = evalGame(ROI,fd,rn,db)    #  ::-1 is string reverse
