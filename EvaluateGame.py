@@ -40,7 +40,7 @@ def evalGame(ROI,fd,rn,db):
         cv2.drawContours(cxcopy,[f],0,(255,255,255),1)
         if db: print ' x {} contour  area {}'.format(x,area)
         if (area > 18 and h >10
-        or  area > 15 and w <9 
+        or  area > 19 and w <9 
             ):        #   18  ok except red panel needs 16
             j = j + 1
             possible = cmask[y:y+h, x:x+w].copy()
