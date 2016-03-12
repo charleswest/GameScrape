@@ -20,6 +20,7 @@ if  __name__ == '__main__':
     db = 0
     dfile = 'digits.txt'
     fd = open(dfile,'w')
+    fdbug = open('debug.txt', 'w')
     tfile = 'testFile.txt'           
     c = [0,0,0] ; f = [0,0,0]
     correct = 0; failed = 0;
@@ -38,7 +39,8 @@ if  __name__ == '__main__':
                 c += 1
                 print '****',
             else:
-                cv2.imwrite('input.png',ROI)   # save the problem page
+                #cv2.imwrite('input.png',ROI)   # save the problem page
+                fdbug.write(line)
                 for rn,n in zip(res,numbs):
                     if rn != n : print rn, n   #  highlight the problems
             p = 100.0 *c / (i+1)
