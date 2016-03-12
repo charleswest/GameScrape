@@ -67,7 +67,7 @@ if  __name__ == '__main__':
     global db     
     db = 0
     tfile = 'testFile.txt'     # file of all test cases 
-    #tfile = 'debug.txt'        # file of problems from last run
+    #tfile = 'debug.txt'        # file of problems from last main loop run
     fd = open('digits.txt','w')            #  write debug info
     with open(tfile,'r' ) as fr:    #  read input data    
         for i,line in enumerate(fr):  

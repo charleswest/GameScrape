@@ -31,20 +31,18 @@ def cwload_digits_lst(fn):
 #   print 'training set labels', labels
     return(digits,labels)
 
-def identifyN(p,lb=0,db=0):
-    ''' identify creates digit descriptor vectors by counting the contours under a set of
-    masks applied to the digit being examined.  Masks are applied by setting the non mask
-    area of the image to zero, black.
-    '''
-    
-    def pxCount(d, msk ):
+def pxCount(d, msk ):
         jk,cnt4d, hier  = cv2.findContours(d,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        m = len(cnt4d)
-        
+        m = len(cnt4d)       
         if m: msk.append(m)
         else: msk.append(0)
         return(msk)
-       
+
+def identifyN(p,lb=0,db=0):
+    ''' identify creates digit descriptor vectors by counting the contours under a set of
+    masks applied to the digit being examined.  Masks are applied by setting the non mask
+    area of the image to zero, black.   Other statistics collected are not used but could
+    be input to some future machine learning algorithm'''
     d = np.zeros_like(p)
     d = p.copy()
     h,w = d.shape
@@ -55,7 +53,7 @@ def identifyN(p,lb=0,db=0):
     d[:, w/2:] = 0        # same as bitwise and
     L = np.sum(d)/255
     cvs(db,d,'digit  ',5)
-    msk = [] 
+    msk = []              #   initialize mask
     msk = pxCount(d,msk)
     
     d = im2.copy()
@@ -71,7 +69,7 @@ def identifyN(p,lb=0,db=0):
     msk = pxCount(d,msk)
 
     d = im2.copy()         #  lower half
-    d[ :h/2, : ] = 0          # zero upper half
+    d[ :h/2, : ] = 0       #  zero upper half
     B = np.sum(d)/255
     cvs(db,d,'digit  ',5)
     msk = pxCount(d,msk)
