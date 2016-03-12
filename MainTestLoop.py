@@ -26,29 +26,20 @@ if  __name__ == '__main__':
     with open(tfile,'r' ) as fr:
         c = 0    #  total correct
         for i,line in enumerate(fr):  
-
             data,b,filen = line.split()     #  ignore b data for now    
             print 'file>>>>>>>> {}  '.format(filen)
-            n  = eval(data)
-            st = ''
-            for x in n:                    # reformat data same as lx           
-                st = st + str(x)
-                lsst = list(st)
-               
-            
+            numbs = [int(x) for x in (data) if x  not in ['(', ',',')' ]]
 ##    now we know what to expect we shall see if we can find it
-            h,w,ROI = Part(filen,db)
-            
-            lx =evalGame(ROI,fd,lsst,db)
-            lsst = map(int,lsst)
-            print 'evalGame returns ',lx
-            print ' input     was   ',lsst
-            if lx == lsst:
+            h,w,ROI = Part(filen,db)           
+            res =evalGame(ROI,fd,numbs,db)
+            print 'evalGame returns ',res
+            print ' input     was   ',numbs
+            if res == numbs:
                 c += 1
                 print '****',
             else:
                 cv2.imwrite('input.png',ROI)   # save the problem page
-                for rn,n in zip(lx,lsst):
+                for rn,n in zip(res,numbs):
                     if rn != n : print rn, n   #  highlight the problems
             p = 100.0 *c / (i+1)
             print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))

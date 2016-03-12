@@ -65,43 +65,17 @@ def evalGame(ROI,fd,rn,db):
 
 if  __name__ == '__main__':
     global db     
-    db = 1
-   
-    fx1 = "pics\sc_sample_terran_1452_835_95_148.png"
-    fx2 = 'pics\sc_sample_terran_302_1312_168_188.png'
-    fx3 = "pics\sc_sample_terran_177_438_101_129.png"
-    fx4 = "pics\sc_sample_terran_1087_267_67_94.png"
-    fx5 = "pics\sc_sample_zerg_99_20_19_18_red.png"
-    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
-    fx7 = 'pics\sc_sample_terran_1475_3612_200_200.png'
-    fx8 = 'pics\sc_sample_terran_69_148_27_38.png'
-    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
-    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
-    txt = 'ROI.png'
-    
-    rn1 = '145283595148'
-    rn2 = '3021312168188'
-    rn3 = '177438101129'
-    rn4 = '10872676794'
-    rn5 = '99201918'
-    rn6 = '3242604254'
-    rn7 = '14753612200200'
-    rn8 = '691482738'
-    dfile = 'digits.txt'
-    fd = open(dfile,'w')
-     
-    
-    for f,rn in zip( [fx5 ],[rn5 ]):    #,fx2,fx3,fx4] :  #,fx2,fx3,fx4]:
-        h,w,ROI = Part(f,db)
-        cvs(db,ROI,'roi',3)
-        listx = evalGame(ROI,fd,rn,db)    #  ::-1 is string reverse
-        print 'eval game Harr   ',listx
-        print ' rn value was    ',map(int,list(rn))
-        #print 'eval game MatchShape',listy
-        print f
-        
-    fd.close()
-    printsort()
+    db = 0
+    tfile = 'testFile.txt'           
+    fd = open('digits.txt','w')            #  write debug info
+    with open(tfile,'r' ) as fr:    #  read input data    
+        for i,line in enumerate(fr):  
+            data,b,filen = line.split()     #  ignore b data for now    
+            print 'file>>>>>>>> {}  '.format(filen)
+            numbs = [int(x) for x in (data) if x  not in ['(', ',',')' ]]           
+            h,w,ROI = Part(filen,db)           
+            print ('evalGame   ',evalGame(ROI,fd,numbs,db)  )
+            print '  input         {} '.format(numbs), '\n'
     cvd()
 
     

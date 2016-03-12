@@ -30,19 +30,21 @@ def cwload_digits_lst(fn):
 #   cv2.imshow('training set', mosaic(10, digits[:]))
 #   print 'training set labels', labels
     return(digits,labels)
+
 def identifyN(p,lb=0,db=0):
-    msk = [] 
-    def pxCount(d,lb = 0,s=0 ):
-        global msk
+    ''' identify creates digit descriptor vectors by counting the contours under a set of
+    masks applied to the digit being examined.  Masks are applied by setting the non mask
+    area of the image to zero, black.
+    '''
+    
+    def pxCount(d, msk ):
         jk,cnt4d, hier  = cv2.findContours(d,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
         m = len(cnt4d)
-##        if m > 0:
-##            for cn in cnt4d:
-##                print cv2.contourArea(cn)
-        if s == 1:           
-            msk = []           
-        msk.append(m)
-        return msk
+        
+        if m: msk.append(m)
+        else: msk.append(0)
+        return(msk)
+       
     d = np.zeros_like(p)
     d = p.copy()
     h,w = d.shape
@@ -53,32 +55,33 @@ def identifyN(p,lb=0,db=0):
     d[:, w/2:] = 0        # same as bitwise and
     L = np.sum(d)/255
     cvs(db,d,'digit  ',5)
-    pxCount(d,lb,1)
+    msk = [] 
+    msk = pxCount(d,msk)
     
     d = im2.copy()
     d[:, :w/2] = 0
     R = np.sum(d)/255
     cvs(db,d,'digit  ',5)
-    pxCount(d)
+    msk = pxCount(d,msk)
 
     d = im2.copy()         #  upper half
     d[ h/2:, : ] = 0
     T = np.sum(d)/255
     cvs(db,d,'digit  ',5)
-    pxCount(d)
+    msk = pxCount(d,msk)
 
     d = im2.copy()         #  lower half
     d[ :h/2, : ] = 0          # zero upper half
     B = np.sum(d)/255
     cvs(db,d,'digit  ',5)
-    pxCount(d)
+    msk = pxCount(d,msk)
     
     d = im2.copy()         #  middle horiz third
     d[   :h/3, : ] = 0        #    - upper 1/3
     d[ 2*h/3:, : ] = 0        #    - lower 1/3
     M3 = np.sum(d)/255
     cvs(db,d,'digit h Mid 1/3',5)
-    pxCount(d )
+    msk = pxCount(d,msk)
     
 
     d = im2.copy()         #  middle vert third
@@ -86,7 +89,8 @@ def identifyN(p,lb=0,db=0):
     d[ :, 2*w/3:  ] = 0        #    - right 1/3
     Mv3 = np.sum(d)/255
     cvs(db,d,'digit  v Mid3',5)
-    mm = pxCount(d ,lb,2)
+    mm = pxCount(d,msk )
+    
     if db: print 'final mask for {} {}'.format(lb,mm)
     
     # statistics
@@ -96,28 +100,29 @@ def identifyN(p,lb=0,db=0):
     #  identify the input
     if   (t0 > 75
                # L  R  T  B  h  v        #  left right top bottom horiz vertical
-    and mm ==   [1, 1, 1, 1, 2, 2]): n = 0
+    and  mm ==  [1, 1, 1, 1, 2, 2]): n = 0
     elif mm ==  [1, 1, 1, 1, 2, 1]: n = 1
-    elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1        # hack for bad threshold
+    elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1   # hack for bad threshold
     elif mm ==  [1, 1, 1, 1, 1, 1] and h == 11 : n = 1 
     elif mm ==  [2, 2, 1, 1, 2, 3]: n = 2
-    elif mm ==  [1, 2, 1, 1, 1, 3] :n = 2       #   noisy 2
+    elif mm ==  [1, 2, 1, 1, 1, 3] :n = 2   # noisy 2
     elif mm ==  [3, 1, 1, 1, 1, 3]: n = 3
-    elif mm ==  [3, 1, 1, 1, 2, 3]: n = 3       #  noisy 3 
+    elif mm ==  [3, 1, 1, 1, 2, 3]: n = 3   # noisy 3 
     elif mm ==  [1, 1, 1, 1, 2, 2]: n = 4
-    elif mm ==  [1, 1, 1, 1, 1, 2]: n = 4       # noisy 4
+    elif mm ==  [1, 1, 1, 1, 1, 2]: n = 4   # noisy 4
     elif mm ==  [2, 2, 1, 2, 1, 3]: n = 5
     elif mm ==  [1, 2, 1, 2, 1, 3]: n = 6
     elif mm ==  [2, 1, 1, 1, 1, 2]: n = 7
     elif mm ==  [1, 1, 2, 2, 1, 3]: n = 8
     elif mm ==  [2, 1, 1, 1, 1, 3]: n = 9
-    elif mm ==  [1, 1, 1, 2, 1, 3]: n = 9            # noisy 9
+    elif mm ==  [1, 1, 1, 2, 1, 3]: n = 9   # noisy 9
     else :n = -1
     
     lb = int(lb)
     parm.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3,Mv3 ]
     d = d - d
-    return parm.lst 
+    return parm.lst
+
 def prtTable(digits,labels):
     db = 1
     dts = np.zeros((10,parm.lstN),dtype='int32' )   
