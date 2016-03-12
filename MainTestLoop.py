@@ -20,34 +20,42 @@ if  __name__ == '__main__':
     db = 0
     dfile = 'digits.txt'
     fd = open(dfile,'w')
-    fdbug = open('debug.txt', 'w')
+    fdbug = open('debug2.txt', 'w')
     tfile = 'testFile.txt'           
-    c = [0,0,0] ; f = [0,0,0]
     correct = 0; failed = 0;
     with open(tfile,'r' ) as fr:
         c = 0    #  total correct
         for i,line in enumerate(fr):  
-            data,b,filen = line.split()     #  ignore b data for now    
+            data,bdata,filen = line.split()       
             print 'file>>>>>>>> {}  '.format(filen)
             numbs = [int(x) for x in (data) if x  not in ['(', ',',')' ]]
 ##    now we know what to expect we shall see if we can find it
-            h,w,ROI = Part(filen,db)           
-            res =evalGame(ROI,fd,numbs,db)
+            ROI,ROIb = Part(filen,db)     #   return both upper and lower b areas      
+            res = evalGame(ROI,fd,numbs,db)
             print 'evalGame returns ',res
             print ' input     was   ',numbs
-            if res == numbs:
+            
+            if 0:    # if true   check both panels -- if 0 check only upper
+                bnumbs = [int(x) for x in (bdata) if x  not in ['(', ',',')' ]]
+                if bnumbs <> [0, 0, 0] :       # move along nothing to see here
+                    res2 = evalGame(ROIb,fd,bnumbs,db)
+                    print 'evalGame  2 ', res2 
+                    print '  input   2  {} '.format(bnumbs), '\n'
+                OK = (res,res2) == (numbs,bnumbs)
+            else:
+                OK = (res ) == (numbs )
+            if OK:
                 c += 1
                 print '****',
-            else:
-                #cv2.imwrite('input.png',ROI)   # save the problem page
-                fdbug.write(line)
+            else:               
+                fdbug.write(line)             # save the problem for later
                 for rn,n in zip(res,numbs):
                     if rn != n : print rn, n   #  highlight the problems
             p = 100.0 *c / (i+1)
-            print '{} correct out of {}   {} pct'.format(c,1+i,round(p,2))
+            print '{} correct out of {}   {} pct\n'.format(c,1+i,round(p,2))
     fd.close()
-##    prb = printsort()
-##    print 'problems are', prb
+    fdbug.close()
+    
     cvd()
             
              

@@ -1,0 +1,4 @@
+(1475,3612,200,200) (2124,408,147,190) pics\sc_sample_terran_1475_3612_200_200.png
+(302,1312,168,188)  (3309,792,76,166)  pics\sc_sample_terran_302_1312_168_188.png
+(324,260,42,54)     (154,114,49,76)    pics\sc_sample_terran_324_260_42_54.png
+(36,0,17,23)        (0,0,0)            pics\sc2_sample_game_screen.png

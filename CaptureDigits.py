@@ -6,7 +6,7 @@ More than one photo is required to capture all numbers.  Captured digits should 
 import numpy as np
 import cv2
 from cwUtils import cvd, cvs, erode, dilate
-from DigitStat import identifyN, parm
+from DigitStat import identifyN, descriptor
 import warnings
 
 global db
@@ -58,12 +58,13 @@ def Part(  fx,db):
     y1  = .02 * h  ; y2 = int(.04 * h)
     x1  = int (.79  * w)  ; x2 = int(w)
     ROI =  img[ 26:39,    1510:1900 ].copy()
+    bROI =  img[ 68:81,    1510:1900 ].copy()
 ##    ROI =  img[ y1:y2,        1510:1585  ].copy()   # 177
 ##    ROI1 = img[ y1:y2,        1650:1725  ].copy()   # 438
 ##    ROI2 = img[ y1:y2,        1775:1900  ].copy()   # 101
 ##    ROI3 = img[ y1:y2,        1820:1900  ].copy()   # 129
     cv2.imwrite('ROI.png',ROI)
-    return(h,w,ROI)
+    return(ROI,bROI)
 
 def capture(f,lb,mask,db):
     ''' write out the ith blob to a file'''
@@ -83,7 +84,7 @@ if  __name__ == '__main__':
     fil = "pics\sc_sample_terran_69_148_27_38.png"
     fil = "pics\sc_sample_zerg_99_20_19_18_red.png"
     #fil = 'input.png'
-    h,w,sROI = Part(fil,db)
+    sROI,bROI = Part(fil,db)
     h,w = sROI.shape[:2]
  #   sROI =   cv2.resize(ROI,(3*w,3*h))        #    this may not be a good idea    
  #   sROI = erode(sROI,1)

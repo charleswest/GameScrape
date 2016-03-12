@@ -12,7 +12,7 @@ import cv2
 from cwUtils import cvd, cvs,erode, dilate
 from CaptureDigits import Part, capture, findNumbers
 
-from DigitStat import identifyN, parm
+from DigitStat import identifyN, descriptor
 from printsort import printsort
 import warnings 
 print __doc__
@@ -37,11 +37,11 @@ def evalGame(ROI,fd,rn,db):
     for i, f in enumerate (Scon):                  
         area = cv2.contourArea(f)
         x,y,w,h = cv2.boundingRect(f)
-        cv2.drawContours(cxcopy,[f],0,(255,255,255),1)
+        cv2.drawContours(cxcopy,[f],0,( 0,0,255),2)
         if db: print ' x {} contour  area {}'.format(x,area)
-        if (area > 18 and h >10
-        or  area > 19 and w <9 
-            ):        #   18  ok except red panel needs 16
+        if (area > 18
+            and h >10
+                    ):        
             j = j + 1
             possible = cmask[y:y+h, x:x+w].copy()
             if j == len(rn):
@@ -49,14 +49,14 @@ def evalGame(ROI,fd,rn,db):
             else:
                 lbx = rn[j]
             if db: print ' x {} possible n {} w {} h {}'.format(x,lbx ,w,h)    
-            parm.lst  = identifyN(possible,lbx,db)
-            n = parm.lst[1]
-            
+            descriptor.lst  = identifyN(possible,lbx,db)
+            n = descriptor.lst[1]
+            cvs(db,cxcopy,'cxcopy',3)
             cv2.drawContours(cxcopy,[f],0,(0,255,0),1)    # draw after capture
             if n <> -1:
                 lx.append((x,n))
                 ly.append(n)                         # approximate order
-                fd.write('{} \n'.format(parm.lst ))
+                fd.write('{} \n'.format(descriptor.lst ))
             if db: print '>>>match evaluate {}   <<<'.format(ly)
         cvs(db,cxcopy,'cxcopy',3)
     lx  =  sorted(lx,key = lambda (x,n):x )
@@ -65,18 +65,24 @@ def evalGame(ROI,fd,rn,db):
 
 if  __name__ == '__main__':
     global db     
-    db = 0
+    db = 1               
     tfile = 'testFile.txt'     # file of all test cases 
-    #tfile = 'debug.txt'        # file of problems from last main loop run
+    tfile = 'debug2.txt'        # file of problems from last main loop run
     fd = open('digits.txt','w')            #  write debug info
     with open(tfile,'r' ) as fr:    #  read input data    
         for i,line in enumerate(fr):  
-            data,b,filen = line.split()     #  ignore b data for now    
+            data,bdata,filen = line.split()     #  ignore b data for now    
             print 'file>>>>>>>> {}  '.format(filen)
             numbs = [int(x) for x in (data) if x  not in ['(', ',',')' ]]           
-            h,w,ROI = Part(filen,db)           
+            ROI,ROIb = Part(filen,db)           
             print ('evalGame   ',evalGame(ROI,fd,numbs,db)  )
             print '  input         {} '.format(numbs), '\n'
+            numbs = [int(x) for x in (bdata) if x  not in ['(', ',',')' ]]
+            if numbs <> [0, 0, 0] :
+                print  ('evalGame 2  ',evalGame(ROIb,fd,numbs,db)  )
+                print '  input    2     {} '.format(numbs), '\n'
+                
+           
     cvd()
 
     

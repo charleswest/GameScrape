@@ -8,3 +8,4 @@
 (69,148,27,38)      (89,110,32,36)     pics\sc_sample_terran_69_148_27_38.png
 (99,20,19,18)       (129,0,18,19)      pics\sc_sample_zerg_99_20_19_18_red.png
 (36,0,17,23)        (0,0,0)            pics\sc2_sample_game_screen.png
+

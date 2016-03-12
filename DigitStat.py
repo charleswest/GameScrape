@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from cwUtils import cvd, cvs, erode, dilate
 import itertools as it
-class parm():
+class descriptor():
     lstN = 12
     head =   '''  lb, n  t0,  L,  R,  T  ,B  S   LR  TB, M3 Mv3 '''
     ahd  =   '''  lb n t0  L R  T  B  S  LR TB M3 Mv3 '''
@@ -91,7 +91,7 @@ def identifyN(p,lb=0,db=0):
     
     if db: print 'final mask for {} {}'.format(lb,mm)
     
-    # statistics
+    # statistics returned as descriptor
     S =  ( max(L,R,T,B) - min(L,R,T,B)) 
     LR =  abs(L-R) 
     TB =  abs(T-B)
@@ -101,7 +101,7 @@ def identifyN(p,lb=0,db=0):
     and  mm ==  [1, 1, 1, 1, 2, 2]): n = 0
     elif mm ==  [1, 1, 1, 1, 2, 1]: n = 1
     elif mm ==  [0, 1, 1, 1, 2, 1]: n = 1   # hack for bad threshold
-    elif mm ==  [1, 1, 1, 1, 1, 1] and h == 11 : n = 1 
+    elif mm ==  [1, 1, 1, 1, 1, 1] and w < 9 : n = 1   # noisy 1
     elif mm ==  [2, 2, 1, 1, 2, 3]: n = 2
     elif mm ==  [1, 2, 1, 1, 1, 3] :n = 2   # noisy 2
     elif mm ==  [3, 1, 1, 1, 1, 3]: n = 3
@@ -114,24 +114,25 @@ def identifyN(p,lb=0,db=0):
     elif mm ==  [1, 1, 2, 2, 1, 3]: n = 8
     elif mm ==  [2, 1, 1, 1, 1, 3]: n = 9
     elif mm ==  [1, 1, 1, 2, 1, 3]: n = 9   # noisy 9
+    elif mm ==  [1, 2, 1, 2, 5, 1]: n = (3,0) 
     else :n = -1
     
     lb = int(lb)
-    parm.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3,Mv3 ]
+    descriptor.lst = [lb,n,t0,L,R,T,B,S,LR,TB,M3,Mv3 ]
     d = d - d
-    return parm.lst
+    return descriptor.lst
 
 def prtTable(digits,labels):
     db = 1
-    dts = np.zeros((10,parm.lstN),dtype='int32' )   
+    dts = np.zeros((10,descriptor.lstN),dtype='int32' )   
     for d , lb in zip(digits,labels):
-        #print '     ',parm.head 
+        #print '     ',descriptor.head 
 ##        if lb in range(10):
-         parm.lst = identifyN(d,lb,db)
-##            print '     ',parm.head  
-##            print 'parm   ',parm.lst,'\n'
+         descriptor.lst = identifyN(d,lb,db)
+##            print '     ',descriptor.head  
+##            print 'descriptor   ',descriptor.lst,'\n'
 ##            cvs(1,d,'digit',4)
-         dts[lb] = parm.lst
+         dts[lb] = descriptor.lst
             
     print dts
 if  __name__ == '__main__':
