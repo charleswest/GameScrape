@@ -67,16 +67,16 @@ if  __name__ == '__main__':
     global db     
     db = 1
    
-    fx1 = "pics\sc_sample_terran_1452_835_95_148.png"
-    fx2 = 'pics\sc_sample_terran_302_1312_168_188.png'
-    fx3 = "pics\sc_sample_terran_177_438_101_129.png"
-    fx4 = "pics\sc_sample_terran_1087_267_67_94.png"
-    fx5 = "pics\sc_sample_zerg_99_20_19_18_red.png"
-    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
-    fx7 = 'pics\sc_sample_terran_1475_3612_200_200.png'
-    fx8 = 'pics\sc_sample_terran_69_148_27_38.png'
-    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
-    fx6 = 'pics\sc_sample_terran_324_260_42_54.png'
+    fx1 = "pics/sc_sample_terran_1452_835_95_148.png"
+    fx2 = 'pics/sc_sample_terran_302_1312_168_188.png'
+    fx3 = "pics/sc_sample_terran_177_438_101_129.png"
+    fx4 = "pics/sc_sample_terran_1087_267_67_94.png"
+    fx5 = "pics/sc_sample_zerg_99_20_19_18_red.png"
+    fx6 = 'pics/sc_sample_terran_324_260_42_54.png'
+    fx7 = 'pics/sc_sample_terran_1475_3612_200_200.png'
+    fx8 = 'pics/sc_sample_terran_69_148_27_38.png'
+    fx6 = 'pics/sc_sample_terran_324_260_42_54.png'
+    fx6 = 'pics/sc_sample_terran_324_260_42_54.png'
     txt = 'ROI.png'
     
     rn1 = '145283595148'

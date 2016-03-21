@@ -26,7 +26,7 @@ if  __name__ == '__main__':
    db = 1
    manifest = 'testFile.txt'
    mdata = open(manifest,'w') 
-   path = 'pics\sc*'   #os.getcwd() #get the current directory   
+   path = 'pics/sc*'   #os.getcwd() #get the current directory   
    files = glob.glob( path)
    for fx in files:
       img = cv2.imread(fx)

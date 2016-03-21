@@ -103,9 +103,9 @@ if  __name__ == '__main__':
     print __doc__
     global db     
     db = 1
-    fil = "pics\sc_sample_terran_177_438_101_129.png"
-    fil = "pics\sc_sample_terran_69_148_27_38.png"
-    fil = "pics\sc_sample_zerg_99_20_19_18_red.png"
+    fil = "pics/sc_sample_terran_177_438_101_129.png"
+    fil = "pics/sc_sample_terran_69_148_27_38.png"
+    fil = "pics/sc_sample_zerg_99_20_19_18_red.png"
     #fil = 'input.png'
     h,w,sROI = Part(fil,db)
     h,w = sROI.shape[:2]
